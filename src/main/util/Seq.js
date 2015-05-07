@@ -5,7 +5,7 @@
 
     var base = mojo.base,
         util = mojo.util || {},
-
+        
         noOperation = function () {
         },
 
@@ -37,12 +37,36 @@
 
         prepareSequencing = function (seq) {
             var ret = seq._sequencer();
-
+            
             if (typeof ret === 'function') {
                 ret = {
                     generate: ret,
                     dispose: noOperation
                 };
+            } else if (ret !== null &&  typeof ret === 'object' && typeof ret.next === 'function') {
+                var iterator = ret,
+                    iteratorDone = false;
+
+                ret = {
+                    generate: function () {
+                        var result;
+
+                        if (iteratorDone) {
+                            stopIteration();
+                        }
+
+                        result = iterator.next();
+                        
+                        if (result === null || typeof result !== 'object' || result.value === undefined && result.done) {
+                            iteratorDone = true;
+                            stopIteration();
+                        }
+                        
+                        iteratorDone = result.done;
+                        return result.value;
+                    },
+                    dispose: noOperation
+                }
             } else if (ret instanceof Array) {
                 ret = {
                     generate: consToGenerator(ret),
@@ -117,6 +141,62 @@
             };
         });
     };
+    
+    util.Seq.prototype.flatMap = function (f) {
+        var me = this;
+        
+        if (typeof f !== 'function') {
+            throw new base.IllegalArgumentException(
+                    '[mojo.util.Seq#flatMap] First argument must be a function');            
+        }
+        
+        return new util.Seq(function () {
+            var sequencing = prepareSequencing(me),
+                generate = sequencing.generate,
+                dispose = sequencing.dispose,
+                subsequencing = null,
+                subgenerate = null,
+                subdispose = null;
+            
+            return {
+                generate: function innerGenerate() {
+                    var ret = null;
+
+                    if (subsequencing === null) {
+                        subsequencing = prepareSequencing(util.Seq.from(f(generate())));
+                        subgenerate = subsequencing.generate;
+                        subdispose = subsequencing.dispose;
+                    }
+                    
+                    try {
+                        ret = subgenerate();
+                    } catch (e) {
+                        if (typeof subdispose === 'function') {
+                            subdispose();
+                        }
+
+                        if (e instanceof base.StopIterationException) {
+                            subsequencing = null;
+                            ret = innerGenerate();
+                        } else {
+                            throw e;
+                        }
+                    }
+
+                    return ret;
+                },
+                dispose: function () {
+                    if (typeof subdispose === 'function') {
+                        subdispose();
+                    } 
+                    
+                    if (typeof dispose === 'function') {
+                        dispose();
+                    } 
+                }
+            };
+        });
+    }
 
     util.Seq.prototype.filter = function (pred) {
         if (typeof pred !== 'function') {
@@ -177,7 +257,7 @@
     };
 
     util.Seq.prototype.skipWhile = function (pred) {
-        if (typeof f !== 'function') {
+        if (typeof pred !== 'function') {
             throw new base.IllegalArgumentException(
                     '[mojo.util.Seq#skipWhile] First argument must be a function');            
         }

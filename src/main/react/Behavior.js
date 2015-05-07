@@ -24,11 +24,31 @@
         this._eventStream = new react.EventStream(doOnSubscribe, doOnDeploy);
     };
 
-    react.subscribe = function (listener) {
+    react.Behavior.prototype.subscribe = function (listener) {
         this._eventStream.subscribe(listener);
     };
     
-    react.Behavior.isBehavorial = function (obj) {
-        return obj instanceof react.Behavior;
+    react.Behavior.from = function (obj) {
+        var ret;
+        
+        if (obj instanceof react.Behavior) {
+            ret = obj;
+        } else if (obj instanceof react.EventStream) {
+            ret = new react.Behavior(null, obj);
+        } else {
+            throw new base.IllegalArgumentException(
+                    '[mojo.react.Behavior.from] First argument must be a behavioral object');
+        }
+        
+        return ret;
     }
+    
+    react.Behavior.of = function (obj) {
+        return new react.Behavior(obj, react.EventStream.nil());
+    }
+    
+    react.Behavior.isBehavioral = function (obj) {
+        return obj instanceof react.Behavior
+            || obj instanceof react.EventStream;
+    };
 }());

@@ -26,6 +26,16 @@
             return util.StringUtils.asString(text)
                     .replace(/^[\s\xA0]+/, '')
                     .replace(/[\s\xA0]+$/, '');
+        },
+        
+        upperCaseFirst: function (text) {
+            var ret = util.StringUtils.asString(text);
+            
+            if (ret.length > 0) {
+                ret = ret[0].toUpperCase() + ret.substring(1, ret.length - 1);
+            }
+            
+            return ret;
         }
     };
 }());

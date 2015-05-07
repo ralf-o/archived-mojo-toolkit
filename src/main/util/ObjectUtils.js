@@ -51,7 +51,7 @@
                 prop;
 
             if (obj !== null && obj !== undefined) {
-                for (prop in value) {
+                for (prop in obj) {
                     if (obj.hasOwnProperty(prop)) {
                         ret.push(prop);
                     }

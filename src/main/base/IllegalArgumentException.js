@@ -5,9 +5,14 @@
 
     var base = mojo.base;
 
-    base.IllegalArgumentException = function (msg, cause) {
+    base.IllegalArgumentException = function constructor(msg, cause) {
         base.Exception.call(this, msg, cause);
+        this.constructor = constructor;
     };
 
     base.IllegalArgumentException.prototype = new base.Exception();
+
+    base.IllegalArgumentException.toString = function () {
+        return '<mojo.base.IllegalArgumentException>';
+    };
 }());

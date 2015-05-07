@@ -240,4 +240,23 @@
             }, 0);
         });
     };
+    
+    react.EventStream.nil = function () {
+        return new react.EventStream(function (listener) {
+            listener.onCompleted();
+        });
+    };
+    
+    react.EventStream.from = function (obj) {
+        var ret;
+        
+        if (obj instanceof react.EventStream) {
+            ret = obj;
+        } else {
+            throw new base.IllegalArgumentException(
+                    '[mojo.react.EventStream.from] First argument must be streamable')
+        }
+        
+        return ret;
+    }
 }());

@@ -3,7 +3,9 @@
 (function () {
     'use strict';
 
-    var util = mojo.util;
+    var base = mojo.base,
+        util = mojo.util,
+        react = mojo.react;
 
     util.DomUtils = {
         toString: function () {
@@ -158,11 +160,12 @@
                 
         extendElement: function (element, varArgsOfExtensions) {
             if (!util.DomUtils.isElement(element)) {
-       	       throw new base.IllegalArgumentException('[mojo.util.DomUtils.extendElement] First argument must be a DOM element');
+       	       throw new base.IllegalArgumentException(
+                       '[mojo.util.DomUtils.extendElement] First argument must be a DOM element');
             }
 
-            var document = util.DomUtils.getOwnerDocuemtn(element),
-                extension = Array.prototype.slice.call(arguments, 1),  
+            var document = util.DomUtils.getOwnerDocument(element),
+                extension = arguments.length < 3 ? arguments[1] : Array.prototype.slice.call(arguments, 1),  
                 propNames,
                 propNames2,
                 propName,
@@ -171,11 +174,11 @@
                 i,
                 j;
 
-            if (!util.DomUtil.isElement(element) || !document) {
+            if (!util.DomUtils.isElement(element) || !document || extension === undefined || extension === null) {
                 // Nothing to do.
             } else if (extension instanceof Array) {
                 for (i = 0; i < extension.length; ++i) {
-                    util.DomUtils.extendElement(element, arg[i]);
+                    util.DomUtils.extendElement(element, extension[i]);
                 }
             } else if (extension instanceof util.Seq) {
                 extension.forEach(function (item) {
@@ -188,11 +191,11 @@
                     util.DomUtils.extendElement(element, item);
                 });
             } else if (typeof extension !== 'object') {
-                element.appendChild(document.createTextNode(arg));
-            } else if (util.DomUtils.isNode(extension)) {
+                element.appendChild(document.createTextNode(extension));
+            } else if (util.DomUtils.isElement(extension)) {
                 element.appendChild(extension);
             } else if (react.Behavior.isBehavioral(extension)) {
-                extension = react.Behavior.from(arg);
+                extension = react.Behavior.from(extension);
                 util.DomUtils.clearElement(element);
                 // util.DomUtils.extendElement(element, extension.get()); // TODO
 
@@ -200,11 +203,9 @@
                     util.DomUtils.clearElement(element);
                     util.DomUtils.extendElement(element, value);
                 });
-            } else if (typeof extension.getDomElement === 'function') {
-                util.DomUtils.extendElement(element, extension.getDomElement());
             } else if (typeof extension.getHtmlElement === 'function') {
                 util.DomUtils.extendElement(element, extension.getHtmlElement());
-            } else if (typeof jQuery !== 'function' && extension instanceof jQuery) {
+            } else if (typeof jQuery === 'function' && extension instanceof jQuery) {
                 util.DomUtils.extendElement(element, extension.toArray());
             } else {
                 propNames = util.ObjectUtils.getOwnProperties(extension);
@@ -227,7 +228,7 @@
                             node[propName] = propValue;
                         }
                     } else if (react.Behavior.isBehavioral(propValue)) {
-                        propValue = util.Behavior.of(propValue);
+                        propValue = react.Behavior.from(propValue);
 
                         (function (node, propName, propValue) {
                             var update = function (value) {
@@ -244,11 +245,11 @@
 
                             // update(propValue.get());  // TODO
 
-                            util.Behavior.of(propValue).onChange().subscribe(function (value) {
+                            react.Behavior.from(propValue).subscribe(function (value) {
                                 update(value);
                             });
-                        }(node, propName, propValue));
-                    } else if (element !== null && propValue !== null && typeof propValue === 'object' && typeof node[propName] === 'object') {
+                        }(element, propName, propValue));
+                    } else if (element !== null && propValue !== null && typeof propValue === 'object' && typeof element[propName] === 'object') {
                         propNames2 = base.Objects.getOwnProperties(propValue);
 
                         for (j = 0; j < propNames2.length; ++j) {
@@ -256,13 +257,14 @@
                             node[propName][propName2] = propValue[propName2];
                         }
                     } else if (typeof propValue !== 'undefined' && propValue !== null) {
-                        propValue = base.Strings.asString(propValue);
-                         if (propName === 'class' || propName === 'className' || propName === 'clazz') {
-                            node.className = propValue;
+                        propValue = util.StringUtils.asString(propValue);
+                        
+                        if (propName === 'class' || propName === 'className' || propName === 'clazz') {
+                            element.className = propValue;
                         } else if (propName === 'style') {
-                            node.style.cssText = propValue;
+                            element.style.cssText = propValue;
                         } else {
-                            node.setAttribute(propName, propValue);
+                            element.setAttribute(propName, propValue);
                         }
                     }
                 }
