@@ -17,20 +17,26 @@ module.exports = function (grunt) {
         copyRuntime: "target"
       }
     },
-    mochacli: {
+    mochaTest: {
+        test: {
         options: {
+            es_staging: true,
             harmony: true,
+            harmony_shipping: true,
+            harmony_rest_parametersx: true,
+            harmony_arrow_functions: true,
+            
             require: [],
-            reporter: 'nyan',
+            reporter: 'spec',
             bail: true
         },
-        all: ['specs/**/*.js']
+        src: ['specs/**/*.js']
+        }
     }
   });
 
   grunt.loadNpmTasks('grunt-traceur');
-  grunt.loadNpmTasks('grunt-mocha-cli');
-  
+    grunt.loadNpmTasks('grunt-mocha-test');
   // Default task.
-  grunt.registerTask('default', ["traceur", "mochacli"]);
+  grunt.registerTask('default', ["mochaTest"]);
 };

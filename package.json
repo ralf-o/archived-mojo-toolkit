@@ -2,12 +2,13 @@
   "name": "mojo-toolkit",
   "version": "0.1.0",
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "mocha": "~2.2.4",
     "chai": "~2.3.0",
-    "traceur": "0.0.89",
+    "grunt": "~0.4.5",
+    "grunt-mocha-test": "^0.12.7",
     "grunt-traceur": "~0.5.4",
-    "mocha-traceur": "~2.1.0",
-    "grunt-mocha-cli": "~1.13.0"
+    "traceur": "0.0.89"
+  },
+  "scripts": {
+    "test": "node --es-staging --harmony --harmony --harmony-arrow-functions --harmony-rest-parameters --harmony_shipping --harmony-modules ./node_modules/.bin/grunt mochaTest"
   }
 }

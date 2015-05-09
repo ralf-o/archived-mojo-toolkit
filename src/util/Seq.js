@@ -1,4 +1,6 @@
-exports.Seq = class Seq {
+'use strict';
+
+module.exports = class Seq {
     constructor(generator) {
         this[Symbol.iterator] = generator
     }
@@ -47,7 +49,7 @@ exports.Seq = class Seq {
             for (let x of this) {
                 if (alreadyStarted || pred(x, index++)) {
                     yield x;
-                    a
+                    alreadyStarted = true
                 }
             }
         }.bind(this));
