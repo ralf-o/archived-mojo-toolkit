@@ -1,4 +1,5 @@
 /.codio
 /.settings
+/.grunt
 /node_modules
 /target/*
