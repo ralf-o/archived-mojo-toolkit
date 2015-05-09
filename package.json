@@ -1,0 +1,13 @@
+{
+  "name": "mojo-toolkit",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "mocha": "~2.2.4",
+    "chai": "~2.3.0",
+    "traceur": "0.0.89",
+    "grunt-traceur": "~0.5.4",
+    "mocha-traceur": "~2.1.0",
+    "grunt-mocha-cli": "~1.13.0"
+  }
+}
