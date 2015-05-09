@@ -1,4 +1,4 @@
-.codio
-.settings
-node_modules
-target/*
+/.codio
+/.settings
+/node_modules
+/target/*
