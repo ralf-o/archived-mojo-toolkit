@@ -5,6 +5,6 @@ export default class Behavior extends Publisher {
         super(subscriber => {
             subscriber.onNext(initialValueSupplier());
             return onSubscribe(subscriber);
-        }.bind(this));
+        });
     }
 }

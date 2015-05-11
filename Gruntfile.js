@@ -3,10 +3,10 @@ module.exports = function (grunt) {
     pkg: grunt.file.readJSON('package.json'),
     traceur: {
       options: {
-        // traceur options here 
+        // traceur options here
         experimental: true,
         // module naming options,
-        modules: 'inline', 
+        modules: 'inline',
                   "inline": 'src/mojo-toolkit.js',
         "out": 'target/mojo-toolkit-compiled.js',
 
@@ -17,26 +17,47 @@ module.exports = function (grunt) {
         copyRuntime: "target"
       }
     },
+    babel: {
+        options: {
+            sourceMap: true,
+            modules: 'common'
+        },
+        dist: {
+            files: [{
+                expand: true,
+                cwd: 'src',
+                src: ['**/*.js'],
+                dest: 'target/commonjs/src',
+                ext: '.js'
+            },
+            {
+                expand: true,
+                cwd: 'specs',
+                src: ['**/*.js'],
+                dest: 'target/commonjs/specs',
+                ext: '.js'
+            }]
+        }
+    },
     mochaTest: {
         test: {
         options: {
             es_staging: true,
             harmony: true,
             harmony_shipping: true,
-            harmony_rest_parametersx: true,
             harmony_arrow_functions: true,
-            
-            require: [],
-            reporter: 'spec',
+            require: 'node_modules/grunt-babel/node_modules/babel-core/node_modules/regenerator/runtime.js',
             bail: true
         },
-        src: ['specs/**/*.js']
+        src: ['target/commonjs/specs/**/*.js']
         }
     }
   });
 
-  grunt.loadNpmTasks('grunt-traceur');
-    grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-babel');
+  //grunt.loadNpmTasks('grunt-traceur');
   // Default task.
-  grunt.registerTask('default', ["mochaTest"]);
+  grunt.registerTask('test', ["babel", "mochaTest"]);
+  grunt.registerTask('default', ["babel", "test"]);
 };
