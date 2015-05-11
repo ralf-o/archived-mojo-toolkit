@@ -1,19 +1,21 @@
+import Subscription from "./Subscription";
+
 export default class Subscriber {
-    constructor(onNext, onComplete, onError) {
-        this._onNext = typeof listener.onNext === 'function'
-                ? listener.onNext
+    constructor(onNext, onComplete = null, onError = null, onSubscribe = null) {
+        this._onNext = typeof onNext === 'function'
+                ? onNext
                 : () => {};
 
-        this._onComplete = listener.onComplete === 'function'
-                ? listener.onComplete
+        this._onComplete = typeof onComplete === 'function'
+                ? onComplete
                 : () => {};
 
-        this._onError = typeof listener.onError === 'function'
-                ? listener.onError
+        this._onError = typeof onError === 'function'
+                ? onError
                 : error => { throw error; };
 
-        this._onSubscribe = typeof listener.onSubscribe === 'function'
-                ? listener.onSubscribe
+        this._onSubscribe = typeof onSubscribe === 'function'
+                ? onSubscribe
                 : () => {};
     }
 
@@ -29,6 +31,10 @@ export default class Subscriber {
         this._onError(error);
     }
 
+    onSubscribe(subscription) {
+        this._onSubscribe(subscription);
+    }
+
     static from(subscriber) {
         var ret;
 
@@ -37,7 +43,9 @@ export default class Subscriber {
         } else if (subscriber != null && typeof subscriber === 'object') {
             ret = new Subscriber(subscriber.onNext, subscriber.onComplete, subscriber.onError);
         } else {
-            throw "Not a valid listener";
+            throw "Not a valid subscriber";
         }
+
+        return ret;
     }
 }

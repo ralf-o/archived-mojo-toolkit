@@ -20,7 +20,8 @@ module.exports = function (grunt) {
     babel: {
         options: {
             sourceMap: true,
-            modules: 'common'
+            modules: 'common',
+            retainLines: true
         },
         dist: {
             files: [{
@@ -41,15 +42,12 @@ module.exports = function (grunt) {
     },
     mochaTest: {
         test: {
-        options: {
-            es_staging: true,
-            harmony: true,
-            harmony_shipping: true,
-            harmony_arrow_functions: true,
-            require: 'node_modules/grunt-babel/node_modules/babel-core/node_modules/regenerator/runtime.js',
-            bail: true
-        },
-        src: ['target/commonjs/specs/**/*.js']
+            options: {
+                reporter: 'spec',
+                require: 'node_modules/grunt-babel/node_modules/babel-core/node_modules/regenerator/runtime.js',
+                bail: true
+            },
+            src: ['target/commonjs/specs/**/*.js']
         }
     }
   });

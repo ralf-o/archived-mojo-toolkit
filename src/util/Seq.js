@@ -2,34 +2,44 @@
 
 export default class Seq {
     constructor(generator) {
-        if (typeof generator === 'function' /*&& generator.constructor !== Function*/) {
-            this[Symbol.iterator] = generator;
-        } else if (typeof generator === 'function') {
-            this[Symbol.iterator] = function* () {
-                var gen = generator(),
-                    values = [];
+        this._generator = generator;
+    }
 
-                var consume = function (value) {
-                    values.push(value);
-                }
+    [Symbol.iterator]() {
+        const iter = this._generator();
+        var ret;
 
-                if (typeof gen === 'function') {
-                    while (true) {
-                        gen(consume);
+        if (iter && typeof iter.next === 'function') {
+            ret = iter;
+        } else if (iter && typeof iter.generate === 'function' && typeof iter.close === 'function') {
+            const {generate, close} = iter;
 
-                        if (values.length === 0) {
-                            break;
-                        }
+            ret = function* () {
+                try {
+                    let values = generate();
 
-                        for (let value of values) {
-                            yield value;
-                        }
-
-                        values.length = 0;
+                    while (values instanceof Array && values.length > 0) {
+                        yield* values;
+                        values = generate();
                     }
+                } finally {
+                    close();
                 }
-            }
+            }();
+        } else if (typeof iter === 'function') {
+            return function* () {
+                let values = iter();
+
+                while (values instanceof Array && values.length > 0) {
+                    yield* values;
+                    values = iter();
+                }
+            }();
+        } else {
+            throw new TypeError();
         }
+
+        return ret;
     }
 
     map(f) {
