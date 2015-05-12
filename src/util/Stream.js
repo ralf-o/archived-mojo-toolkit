@@ -209,4 +209,4 @@ export default class Stream {
         return Stream.iterate([start], value => value += step)
                 .takeWhile(n => n < end);
     }
-};
+}

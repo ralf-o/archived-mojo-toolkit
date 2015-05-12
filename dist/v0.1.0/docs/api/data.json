@@ -1,0 +1,189 @@
+{
+    "project": {
+        "name": "Mojo-Toolkit",
+        "description": "",
+        "version": "0.1.0",
+        "url": ""
+    },
+    "files": {
+        "src/reactive/Publisher.js": {
+            "name": "src/reactive/Publisher.js",
+            "modules": {
+                "reactive": 1
+            },
+            "classes": {
+                "Publisher": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/reactive/Subscriber.js": {
+            "name": "src/reactive/Subscriber.js",
+            "modules": {},
+            "classes": {
+                "Subscriber": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/util/Stream.js": {
+            "name": "src/util/Stream.js",
+            "modules": {
+                "util": 1
+            },
+            "classes": {
+                "Stream": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "reactive": {
+            "name": "reactive",
+            "submodules": {},
+            "classes": {
+                "Publisher": 1,
+                "Subscriber": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/reactive/Subscriber.js",
+            "line": 3,
+            "description": "Class representing a reactive event stream."
+        },
+        "util": {
+            "name": "util",
+            "submodules": {},
+            "classes": {
+                "Stream": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/util/Stream.js",
+            "line": 10,
+            "description": "Class as representation of a lazy sequences"
+        }
+    },
+    "classes": {
+        "Publisher": {
+            "name": "Publisher",
+            "shortname": "Publisher",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "reactive",
+            "file": "src/reactive/Publisher.js",
+            "line": 4,
+            "description": "Class representing a reactive event stream."
+        },
+        "Subscriber": {
+            "name": "Subscriber",
+            "shortname": "Subscriber",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "reactive",
+            "namespace": "",
+            "file": "src/reactive/Subscriber.js",
+            "line": 3,
+            "description": "Class representing a listener for events send by a Publisher."
+        },
+        "Stream": {
+            "name": "Stream",
+            "shortname": "Stream",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "util",
+            "namespace": "",
+            "file": "src/util/Stream.js",
+            "line": 10,
+            "description": "Class as representation of a lazy sequences",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "generator",
+                    "description": "The generator responsible for the iteration",
+                    "type": "Function"
+                }
+            ]
+        }
+    },
+    "classitems": [
+        {
+            "file": "src/reactive/Publisher.js",
+            "line": 11,
+            "is_constructor": 1,
+            "this": "{Publisher}",
+            "class": "Publisher",
+            "module": "reactive"
+        },
+        {
+            "file": "src/util/Stream.js",
+            "line": 56,
+            "description": "Maps each value of the stream",
+            "itemtype": "method",
+            "name": "map",
+            "params": [
+                {
+                    "name": "f",
+                    "description": "Mapping function",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "Stream of the mapped values",
+                "type": "Stream"
+            },
+            "class": "Stream",
+            "module": "util"
+        },
+        {
+            "file": "src/util/Stream.js",
+            "line": 196,
+            "description": "Creates a stream of numeric values from a start value (including) to\nan end value (excluding).",
+            "example": [
+                "\n    Seq.range(1, 10) // 1, 2, 3, 4, 5, 6, 7, 8, 9"
+            ],
+            "itemtype": "method",
+            "name": "range",
+            "params": [
+                {
+                    "name": "start",
+                    "description": "Start value",
+                    "type": "Number"
+                },
+                {
+                    "name": "end",
+                    "description": "End value",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Stream of iterated values",
+                "type": "Stream"
+            },
+            "class": "Stream",
+            "module": "util"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: this",
+            "line": " src/reactive/Publisher.js:11"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/reactive/Publisher.js:11"
+        }
+    ]
+}

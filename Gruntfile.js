@@ -1,41 +1,30 @@
 module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    traceur: {
-      options: {
-        // traceur options here
-        experimental: true,
-        // module naming options,
-        modules: 'inline',
-                  'inline': 'src/mojo-toolkit.js',
-        'out': 'target/mojo-toolkit-compiled.js',
-
-        moduleNaming: {
-          //stripPrefix: 'src/es6',
-          //addPrefix: 'com/mycompany/project'
-        },
-        copyRuntime: 'target'
-      }
+    clean: {
+        build: {
+            src: ["build/*", "dist/v<%= pkg.version %>"],
+        }
     },
     babel: {
         options: {
-            sourceMap: true,
-            modules: 'common',
-            retainLines: true
+            modules: 'umd',
+            retainLines: true,
+            optional: ['regenerator', 'runtime']
         },
         dist: {
             files: [{
                 expand: true,
                 cwd: 'src',
                 src: ['**/*.js'],
-                dest: 'target/commonjs/src',
+                dest: 'build/src',
                 ext: '.js'
             },
             {
                 expand: true,
                 cwd: 'specs',
                 src: ['**/*.js'],
-                dest: 'target/commonjs/specs',
+                dest: 'build/specs',
                 ext: '.js'
             }]
         }
@@ -44,10 +33,9 @@ module.exports = function (grunt) {
         test: {
             options: {
                 reporter: 'spec',
-                require: 'node_modules/grunt-babel/node_modules/babel-core/node_modules/regenerator/runtime.js',
                 bail: true
             },
-            src: ['target/commonjs/specs/**/*.js']
+            src: ['build/specs/**/*.js']
         }
     },
     yuidoc: {
@@ -58,19 +46,38 @@ module.exports = function (grunt) {
            url: '<%= pkg.homepage %>',
            options: {
                paths: 'src/',
-               outdir: 'docs/',
+               outdir: 'dist/v<%= pkg.version %>/docs/api/',
                themedir: 'node_modules/yuidoc-theme-blue/',
                tabtospace: 4
             }
         }
+    },
+    browserify: {
+        js: {
+            extend: true,
+            src: ['build/src/**/*.js'],
+            dest: 'dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js'
+        }
+    },
+    compress: {
+        main: {
+            options: {
+                 mode: 'gzip'
+            },
+            src: ['dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js'],
+            dest: 'dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js.gz'
+        }
     }});
 
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
+    grunt.loadNpmTasks('grunt-browserify')
+    grunt.loadNpmTasks('grunt-contrib-compress');
 
     grunt.registerTask('compile', ['babel']);
-    grunt.registerTask('test', ['compile', 'mochaTest']);
-    grunt.registerTask('doc', ['test', 'yuidoc']);
-    grunt.registerTask('default', ['doc']);
+    grunt.registerTask('test', ['babel', 'mochaTest']);
+    grunt.registerTask('doc', ['babel', "mochaTest", 'yuidoc']);
+    grunt.registerTask('default', ['clean', "babel", 'mochaTest', 'yuidoc', 'browserify', 'compress']);
 };

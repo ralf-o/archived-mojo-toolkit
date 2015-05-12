@@ -2,6 +2,6 @@
 /.settings
 /.grunt
 /node_modules
-/target/*
+/build/*
 /docs/*
 /nbproject/private/
