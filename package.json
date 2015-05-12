@@ -1,6 +1,7 @@
 {
-  "name": "Mojo-Toolkit",
+  "name": "Mojo",
   "version": "0.1.0",
+  "homepage": "https://github.com/ralf-o/mojo-toolkit",
   "devDependencies": {
     "babel-runtime": "^5.2.17",
     "chai": "~2.3.0",
@@ -10,6 +11,7 @@
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-compress": "^0.13.0",
+    "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-yuidoc": "^0.8.0",
     "grunt-mocha-test": "^0.12.7",
     "yuidoc-theme-blue": "^0.1.8"
