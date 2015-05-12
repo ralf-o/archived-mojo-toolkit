@@ -4,7 +4,7 @@ export default class Processor extends Publisher {
     constructor(onSubscribe) {
         super(subscriber => {
             if (this._subscriptionMap.has(subscriber)) {
-                throw "A subscriber must subscribe mutliple times";
+                throw "A subscriber must not subscribe mutliple times";
             }
 
             let subscription = onSubscribe(subscriber);
@@ -34,5 +34,9 @@ export default class Processor extends Publisher {
         for (let subscriber of this._subscriptionMap.keys()) {
             subscriber.onError(error);
         }
+    }
+
+    toPublisher() {
+        return new Publisher(subscriber => this.subscribe(subscriber));
     }
 }

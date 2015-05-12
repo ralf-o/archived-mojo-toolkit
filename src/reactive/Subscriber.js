@@ -1,7 +1,13 @@
 import Subscription from "./Subscription";
 
+/**
+ * Class representing a listener for events send by a Publisher.
+ *
+ * @class  Subscriber
+ * @module reactive
+ */
 export default class Subscriber {
-    constructor(onNext, onComplete = null, onError = null, onSubscribe = null) {
+    constructor(onNext, onComplete, onError, onSubscribe) {
         this._onNext = typeof onNext === 'function'
                 ? onNext
                 : () => {};
@@ -43,7 +49,7 @@ export default class Subscriber {
         } else if (subscriber != null && typeof subscriber === 'object') {
             ret = new Subscriber(subscriber.onNext, subscriber.onComplete, subscriber.onError);
         } else {
-            throw "Not a valid subscriber";
+            throw TypeError("[Subscriber.from] Not a valid subscriber");
         }
 
         return ret;

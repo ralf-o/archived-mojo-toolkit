@@ -1,7 +1,17 @@
 import Subscriber from "./Subscriber";
 import Subscription from "./Subscription";
 
+/**
+ * Class representing a reactive event stream.
+ *
+ * @class  Publisher
+ * @module reactive
+ */
 export default class Publisher {
+    /**
+     * @constructor
+     * @this {Publisher}
+     */
     constructor(onSubscribe) {
         this._onSubscribe = onSubscribe;
     }

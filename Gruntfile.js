@@ -7,14 +7,14 @@ module.exports = function (grunt) {
         experimental: true,
         // module naming options,
         modules: 'inline',
-                  "inline": 'src/mojo-toolkit.js',
-        "out": 'target/mojo-toolkit-compiled.js',
+                  'inline': 'src/mojo-toolkit.js',
+        'out': 'target/mojo-toolkit-compiled.js',
 
         moduleNaming: {
-          //stripPrefix: "src/es6",
-          //addPrefix: "com/mycompany/project"
+          //stripPrefix: 'src/es6',
+          //addPrefix: 'com/mycompany/project'
         },
-        copyRuntime: "target"
+        copyRuntime: 'target'
       }
     },
     babel: {
@@ -49,13 +49,28 @@ module.exports = function (grunt) {
             },
             src: ['target/commonjs/specs/**/*.js']
         }
-    }
-  });
+    },
+    yuidoc: {
+        compile: {
+           name: '<%= pkg.name %>',
+           description: '<%= pkg.description %>',
+           version: '<%= pkg.version %>',
+           url: '<%= pkg.homepage %>',
+           options: {
+               paths: 'src/',
+               outdir: 'docs/',
+               themedir: 'node_modules/yuidoc-theme-blue/',
+               tabtospace: 4
+            }
+        }
+    }});
 
-  grunt.loadNpmTasks('grunt-mocha-test');
-  grunt.loadNpmTasks('grunt-babel');
-  //grunt.loadNpmTasks('grunt-traceur');
-  // Default task.
-  grunt.registerTask('test', ["babel", "mochaTest"]);
-  grunt.registerTask('default', ["babel", "test"]);
+    grunt.loadNpmTasks('grunt-babel');
+    grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-contrib-yuidoc');
+
+    grunt.registerTask('compile', ['babel']);
+    grunt.registerTask('test', ['compile', 'mochaTest']);
+    grunt.registerTask('doc', ['test', 'yuidoc']);
+    grunt.registerTask('default', ['doc']);
 };
