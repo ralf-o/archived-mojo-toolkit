@@ -8,8 +8,9 @@ module.exports = function (grunt) {
         },
         babel: {
             options: {
-                modules: 'umd',
+                modules: 'common',
                 retainLines: true,
+                moduleIds: false,
                 optional: ['runtime']
             },
             dist: {
@@ -33,6 +34,7 @@ module.exports = function (grunt) {
             test: {
                 options: {
                     reporter: 'spec',
+                    require: 'node_modules/grunt-babel/node_modules/babel-core/node_modules/regenerator/runtime.js',
                     bail: true
                 },
                 src: ['build/specs/**/*.js']
@@ -54,19 +56,20 @@ module.exports = function (grunt) {
         },
         browserify: {
             js: {
-                extend: true,
-                src: ['build/src/**/*.js'],
+                //extend: true,
+                //src: ['build/src/**/*.js'],
+                src: 'build/src/mojo-browser.js',
                 dest: 'dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js'
             }
         },
         uglify: {
             options: {
                 ASCIIOnly: true,
-                banner: '/*!\n'
-                        + '  <%= pkg.name %> v<%= pkg.version %> - '
+                banner: '/*\n'
+                        + ' <%= pkg.name %> v<%= pkg.version %> - '
                         + '<%= grunt.template.today("yyyy-mm-dd") %>\n'
-                        + '  Homepage: <%= pkg.homepage %>\n'
-                        + '  Licencse: Apache License, Version 2.0\n'
+                        + ' Homepage: <%= pkg.homepage %>\n'
+                        + ' Licencse: Apache License, Version 2.0\n'
                         + '*/\n'
             },
             js: {
