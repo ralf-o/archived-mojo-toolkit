@@ -45,9 +45,14 @@ export default class Subscriber {
         var ret;
 
         if (typeof subscriber === 'function') {
-            ret = new Subscriber(subscriber, null, null);
+            ret = new Subscriber(subscriber, null, null, null);
+        } else if (typeof subscriber.onNext === 'function'
+                && typeof subscriber.onComplete === 'function'
+                && typeof subscriber.onError === 'function'
+                && typeof subscriber.onSubscribe === 'function') {
+            ret = subscriber;
         } else if (subscriber != null && typeof subscriber === 'object') {
-            ret = new Subscriber(subscriber.onNext, subscriber.onComplete, subscriber.onError);
+            ret = new Subscriber(subscriber.onNext, subscriber.onComplete, subscriber.onError, subscriber.onSubscribe);
         } else {
             throw TypeError("[Subscriber.from] Not a valid subscriber");
         }

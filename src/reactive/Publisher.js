@@ -1,5 +1,6 @@
 import Subscriber from "./Subscriber";
 import Subscription from "./Subscription";
+import Stream from "../util/Stream";
 
 /**
  * Class representing a reactive event stream.
@@ -91,6 +92,10 @@ export default class Publisher {
             .request(Infinity);
     }
 
+    asBehavior(initalValueSupplier = () => null) {
+        return new Behavior(initialValueSupplier, this);
+    }
+
     toArray() {
         return new Promise((resolve, reject) => {
             const arr = [];
@@ -109,15 +114,61 @@ export default class Publisher {
     }
 
     static from(items) {
-        var ret;
+        if (typeof items === 'function') {
+            return Publisher.from(new Stream(items));
+        } else if (items && typeof items[Symbol.iterator] === 'function') {
+            return new Publisher(subscriber => {
+                let isClosed = false,
+                    iterator = null;
 
-        if (items instanceof Array) {
-            ret = Publisher.of(...items);
-        } else {
-            throw new TypeError();
+                const ret = new Subscription(
+                    () => {
+                        if (iterator !== null) {
+                            // TODO - how to close iterator???
+                        }
+
+                        isClosed = true;
+                    },
+                    n => {
+                        let callback = () => {
+                            if (!isClosed) {
+                                if (iterator === null) {
+                                    iterator = items[Symbol.iterator]();
+                                }
+
+                                let next = iterator.next();
+
+                                if (!next.done || next.value !== undefined) {
+                                    subscriber.onNext(next.value);
+                                } else if (next.done) {
+                                    subscriber.onComplete();
+
+                                    ret.close();
+                                }
+                            }
+
+                            if (--n > 0) {
+                                setTimeout(callback, 0);
+                            }
+                        };
+
+                        if (iterator === null) {
+                            callback();
+                        } else {
+                            setTimeout(callback, 0);
+                        }
+                    }
+                );
+
+                return ret;
+            });
         }
 
-        return ret;
+        throw new TypeError();
+    }
+
+    static empty() {
+        return Publisher.of();
     }
 
     static iterate(startValues, f) {
@@ -132,13 +183,16 @@ export default class Publisher {
                     subscription.close();
                 },
                 n => {
-                    if (!isCompleted) {
+                    if (n > 0 && !isCompleted) {
                         const callback = () => {
                             if (!isCompleted) {
                                 values.push(f(...values));
-                                subscriber.onNext(values.shift())
+                                let nextValue = values.shift();
 
-                                setTimeout(callback);
+                                setTimeout(() => {
+                                    subscriber.onNext(nextValue);
+                                    subscription.request(n - 1);
+                                }, 0);
                             }
                         };
 
@@ -153,5 +207,58 @@ export default class Publisher {
 
     static range(start, end) {
         return this.iterate([start], n => n + 1).takeWhile(n => n < end);
+    }
+
+    static merge(...publishers) {
+        return new Publisher(subscriber => {
+            let numberOfRequestedValues = 0,
+                numberOfActivePublishers = publishers.length,
+                subscription;
+
+            const valueQueue = [],
+                subscriptions = publishers.map(publisher => publisher.subscribe({
+                    onNext: value => {
+                        if (numberOfRequestedValues === 0) {
+                            valueQueue.push(value);
+                        } else {
+                            subscriber.onNext(value);
+
+                            if (--numberOfRequestedValues > 0) {
+                                subscriptions.forEach(subscription => subscription.request(1));
+                            }
+                        }
+                    },
+                    onComplete: () => {console.log(">>>>", numberOfActivePublishers)
+                        if (--numberOfActivePublishers === 0) {
+                            subscriber.onComplete();
+                        }
+                    },
+                    onError: error => {
+                        subscription.close();
+                        subscriber.onError(error);
+                    },
+                    onSubscribe: subscription => {
+
+                    }
+                }));
+
+                return new Subscription(
+                    () => subscriptions.forEach(subscription => subscription.close()),
+                    n => {
+                        while (n > 0 && valueQueue.length > 0) {
+                            let nextValue = valueQueue.shift();
+
+                            setTimeout(() => subscriber.onNext(nextValue), 0);
+                            --n;
+                        }
+
+                        if (n > 0) {
+                            numberOfRequestedValues = n;
+                            subscriptions.forEach(subscription => setTimeout(
+                                () => subscription.request(1),0));
+                        }
+                    }
+                );
+        });
     }
 }
