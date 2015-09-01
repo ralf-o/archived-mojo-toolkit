@@ -1,5 +1,5 @@
 {
-  "name": "Mojo",
+  "name": "mojo core",
   "version": "0.1.0",
   "homepage": "https://github.com/ralf-o/mojo-toolkit",
   "devDependencies": {
