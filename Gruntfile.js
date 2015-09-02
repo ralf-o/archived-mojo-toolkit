@@ -85,6 +85,15 @@ module.exports = function (grunt) {
                 src: ['dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js'],
                 dest: 'dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js.gz'
             }
+        },
+        watch: {
+          js: {
+            options: {
+              spawn: false,
+            },
+            files: ['src/**/*.js', 'specs/**/*.js'],
+            tasks: ['compile', 'mochaTest']
+          }
         }
     });
 
@@ -95,6 +104,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask('compile', ['babel']);
     grunt.registerTask('test', ['babel', 'mochaTest']);

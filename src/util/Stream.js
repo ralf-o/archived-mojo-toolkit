@@ -165,14 +165,25 @@ export default class Stream {
     }
 
     static from(items) {
-        if (!items || typeof items[Symbol.iterator] !== 'function') {
-            throw new TypeError();
+        if (items === null) {
+            return Seq.of();
         } else if (items instanceof Stream) {
             return items;
         } else if (items instanceof Array) {
             return new Stream(() => items.slice()[Symbol.iterator]());
-        } else {
+        } if (items && typeof items[Symbol.iterator] === 'function') {
             return new Stream(() => items[Symbol.iterator]());
+        } else if (items && typeof cljs === 'object' && cljs.core.sequential_QMARK_(items)) {
+            let seq = cljs.core.seq(items);
+
+            return new Stream(function* () {
+                while (!cljs.core.empty_QMARK_(seq)) {
+                    yield cljs.core.first(seq);
+                    seq = cljs.core.rest(seq);
+                }
+            });
+        } else {
+            throw new TypeError("Not sequentiable: " + items);
         }
     }
 
