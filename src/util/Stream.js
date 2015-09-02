@@ -173,7 +173,16 @@ export default class Stream {
             return new Stream(() => items.slice()[Symbol.iterator]());
         } if (items && typeof items[Symbol.iterator] === 'function') {
             return new Stream(() => items[Symbol.iterator]());
-        } else if (items && typeof cljs === 'object' && cljs.core.sequential_QMARK_(items)) {
+        } else  if (items && items["cljs$core$ISeqable$_seq$arity$1"] && typeof cljs === 'object') {
+            let seq = cljs.core.seq(items);
+
+            return new Stream(function* () {
+                while (!cljs.core.empty_QMARK_(seq)) {
+                    yield cljs.core.first(seq);
+                    seq = cljs.core.rest(seq);
+                }
+            });
+        } else if (false && items && typeof cljs === 'object' && cljs.core.sequential_QMARK_(items)) {
             let seq = cljs.core.seq(items);
 
             return new Stream(function* () {
