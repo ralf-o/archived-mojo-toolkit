@@ -3,13 +3,12 @@
 /**
  * Class as representation of a lazy sequences
  *
- * @class  Stream
- * @module util
+ * @class Stream
  */
 export default class Stream {
     /**
-     * @constructor
      * @class Stream
+     * @constructor
      * @param {function} generator The generator responsible for the iteration
      */
     constructor(generator) {
@@ -56,7 +55,7 @@ export default class Stream {
     /**
      * Maps each value of the stream
      *
-     * @method map
+     * @method Stream.map
      * @param {function} f Mapping function
      * @return {Stream} Stream of the mapped values
      */
@@ -249,7 +248,7 @@ export default class Stream {
      *     Stream.range(1, 10)      // 1, 2, 3, 4, 5, 6, 7, 8, 9
      *     Stream.range(0, -8, -2)  // 0, -2, -4, -6
      *
-     * @method range
+     * @method Stream.range
      * @param {Number} start Start value
      * @param {Number} end End value
      * @return {Stream} Stream of iterated values

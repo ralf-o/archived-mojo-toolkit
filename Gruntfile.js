@@ -53,6 +53,22 @@ module.exports = function (grunt) {
                 }
             }
         },
+        jsdoc: {
+            dist: {
+                src: ['build/src/**/*.js'],
+                options: {
+                    destination: 'dist/doc'
+                }
+            }
+        },
+        esdoc : {
+            dist : {
+                options: {
+                    source: 'src/',
+                    destination: 'dist/doc2'
+                }
+            }
+        },
         browserify: {
             js: {
                 //extend: true,
@@ -115,10 +131,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    //grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-esdoc');
 
     grunt.registerTask('compile', ['babel']);
     grunt.registerTask('test', ['babel', 'mochaTest']);
     grunt.registerTask('doc', ['babel', "mochaTest", 'yuidoc']);
-    grunt.registerTask('dist', ['clean', "babel", 'mochaTest', 'yuidoc', 'browserify', 'uglify', 'compress']);
+    grunt.registerTask('dist', ['clean', "babel", 'mochaTest', 'yuidoc', /*'jsdoc', */'esdoc', 'browserify', 'uglify', 'compress']);
     grunt.registerTask('default', ['dist']);
 };
