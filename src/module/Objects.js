@@ -1,7 +1,40 @@
 'use strict';
 
 export default class Objects {
-    static get(obj, path) {
+    static isSomething(obj) {
+        return obj !== null && obj !== undefined;
+    }
+
+    static isNothing(obj) {
+        return obj === null || obj === undefined;
+    }
+
+    static asString(obj) {
+        var ret;
+
+        if (obj === undefined || obj === null) {
+            ret = '';
+        } else if (typeof obj === 'string') {
+            ret = obj;
+        } else {
+            ret = obj.toString();
+
+            if (typeof ret !== 'string') {
+                // Normally in this case the JavaScript engine should return undefined.
+                // Nevertheless, to play save, we handle all cases here.
+                if (ret === undefined || ret === null) {
+                    ret = '';
+                } else {
+                    ret = '' + ret;
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    // TODO: Handling of ClojureScript objects not really nice (still working)
+    static get(obj, path, defaultValue = undefined) {
         var ret = undefined;
 
         if (obj !== null && obj !== undefined) {
@@ -41,16 +74,21 @@ export default class Objects {
                 }
         }
 
+        if (ret === undefined) {
+            ret = defaultValue;
+        }
+
         return ret;
     }
 
+    // TODO: Handling of ClojureScript objects not really nice (still working)
     static toJS(obj) {
         var ret = obj;
 
-        if (obj !== null && obj !== undefined) {
-            if (obj.__toJS) {
+        if (obj) {
+            if (typeof obj.__toJS === 'function') {console.log(obj);
                 ret = obj.__toJS();
-            } else if (obj.meta && typeof cljs === 'object') {
+            } else if (obj.meta && typeof cljs === 'object' && cljs) {
                 ret = cljs.core.clj__GT_js(obj);
             }
         }

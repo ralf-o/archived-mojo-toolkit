@@ -10,8 +10,7 @@ module.exports = function (grunt) {
             options: {
                 modules: 'common',
                 retainLines: true,
-                moduleIds: false,
-                optional: ['runtime']
+                moduleIds: false
             },
             dist: {
                 files: [{
@@ -58,7 +57,7 @@ module.exports = function (grunt) {
             js: {
                 //extend: true,
                 //src: ['build/src/**/*.js'],
-                src: 'build/src/mojo-browser.js',
+                src: 'build/src/mojo.js',
                 dest: 'dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js'
             }
         },
@@ -87,13 +86,24 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-          js: {
-            options: {
-              spawn: false,
-            },
-            files: ['src/**/*.js', 'specs/**/*.js'],
-            tasks: ['compile', 'mochaTest']
-          }
+            js: {
+                options: {
+                    spawn: true,
+                },
+                files: ['src/**/*.js', 'specs/**/*.js'],
+                tasks: ['compile', 'mochaTest']
+            }
+        }
+    });
+
+    // TODO: This is not really working :-(
+    // On watch events, if the changed file is a test file then configure mochaTest to only
+    // run the tests from that file. Otherwise run all the tests
+    grunt.event.on('watch', function (action, filePath) {
+        if (filePath.match('^src/')) {
+            grunt.config.set(['mochaTest', 'test', 'src'], 'build/specs/**/*.js');
+        } else if (filePath.match('^specs/')) {
+            grunt.config.set(['mochaTest', 'test', 'src'], 'build/' + filePath);
         }
     });
 
