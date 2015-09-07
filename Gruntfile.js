@@ -33,7 +33,9 @@ module.exports = function (grunt) {
             test: {
                 options: {
                     reporter: 'spec',
-                    require: 'node_modules/grunt-babel/node_modules/babel-core/node_modules/regenerator/runtime.js',
+                    require: [
+                        'node_modules/grunt-babel/node_modules/babel-core/node_modules/regenerator/runtime.js'
+                    ],
                     bail: true
                 },
                 src: ['build/specs/**/*.js']
@@ -47,7 +49,7 @@ module.exports = function (grunt) {
                url: '<%= pkg.homepage %>',
                options: {
                    paths: 'src/',
-                   outdir: 'dist/v<%= pkg.version %>/docs/api/',
+                   outdir: 'dist/v<%= pkg.version %>/docs/api-youidoc/',
                    themedir: 'node_modules/yuidoc-theme-blue/',
                    tabtospace: 4
                 }
@@ -57,15 +59,22 @@ module.exports = function (grunt) {
             dist: {
                 src: ['build/src/**/*.js'],
                 options: {
-                    destination: 'dist/doc'
+                    destination: 'dist/v<%= pkg.version %>/docs/api-jsdoc'
                 }
             }
         },
         esdoc : {
             dist : {
                 options: {
-                    source: 'src/',
-                    destination: 'dist/doc2'
+                    source: 'src/module/',
+                    destination: 'dist/v<%= pkg.version %>/docs/api',
+                    autoPrivate: false,
+                    title: 'Mojo Toolkit',
+                    test: {
+                        type: 'mocha',
+                        source: './specs',
+                        includes: ['\\Spec.js']
+                    }
                 }
             }
         },
@@ -107,7 +116,8 @@ module.exports = function (grunt) {
                     spawn: true,
                 },
                 files: ['src/**/*.js', 'specs/**/*.js'],
-                tasks: ['compile', 'mochaTest']
+                //tasks: ['compile', 'mochaTest']
+                tasks: ['esdoc']
             }
         }
     });
@@ -126,7 +136,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-mocha-test');
-    grunt.loadNpmTasks('grunt-contrib-yuidoc');
+    //grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-compress');
@@ -137,6 +147,6 @@ module.exports = function (grunt) {
     grunt.registerTask('compile', ['babel']);
     grunt.registerTask('test', ['babel', 'mochaTest']);
     grunt.registerTask('doc', ['babel', "mochaTest", 'yuidoc']);
-    grunt.registerTask('dist', ['clean', "babel", 'mochaTest', 'yuidoc', /*'jsdoc', */'esdoc', 'browserify', 'uglify', 'compress']);
+    grunt.registerTask('dist', ['clean', "babel", 'mochaTest', /* 'yuidoc', 'jsdoc', */'esdoc', 'browserify', 'uglify', 'compress']);
     grunt.registerTask('default', ['dist']);
 };

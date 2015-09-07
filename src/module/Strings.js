@@ -3,10 +3,44 @@
 import Objects from './Objects';
 
 export default class Strings {
+   /**
+     * @param {string} text
+     *     The string to be trimmed
+     *
+     * @return {string}
+     *     The trimmed string.
+     *     If argument 'text' is not a string then it will be converted
+     *     to a string first.
+     *
+     * @example
+     *     Strings.trim('  some text  ')             // 'some text'
+     *     Strings.trim('some text')                 // 'some text'
+     *     String.trim('')                           // ''
+     *     String.trim(null)                         // ''
+     *     String.trim(undefined)                    // ''
+     *     String.trim({toString: () => 'whatever'}) // 'whatever'
+     */
     static trim(text) {
         return Objects.asString(text).trim();
     }
 
+    /**
+     * @param {string} text
+     *     The string to be trimmed (possible to null).
+     *
+     * @return {string}
+     *     The trimmed string.
+     *     If argument 'text' is not a string then it will be converted
+     *     to a string first, using function Objects.asString
+     *
+     * @example
+     *     Strings.trimToNull('  some text  ')             // 'some text'
+     *     Strings.trimToNull('some text')                 // 'some text'
+     *     String.trim('')                                 // null
+     *     String.trim(null)                               // null
+     *     String.trim(undefined)                          // undefined
+     *     String.trim({toString: () => '  whatever  '})   // 'whatever'
+     */
     static trimToNull(text) {
         let ret = Strings.trim(text);
 

@@ -86,7 +86,7 @@ export default class Objects {
         var ret = obj;
 
         if (obj) {
-            if (typeof obj.__toJS === 'function') {console.log(obj);
+            if (typeof obj.__toJS === 'function') {
                 ret = obj.__toJS();
             } else if (obj.meta && typeof cljs === 'object' && cljs) {
                 ret = cljs.core.clj__GT_js(obj);

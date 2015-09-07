@@ -12,6 +12,10 @@ export default class Stream {
      * @param {function} generator The generator responsible for the iteration
      */
     constructor(generator) {
+        /**
+         * @ignore
+         * @private
+         */
         this._generator = generator;
     }
 
@@ -50,7 +54,7 @@ export default class Stream {
         }
 
         return ret;
-    }
+    };
 
     /**
      * Maps each value of the stream

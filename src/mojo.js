@@ -3,7 +3,7 @@ import Objects from "./module/Objects";
 import Strings from "./module/Strings";
 import Stream from "./module/Stream";
 
-let module = {
+const module = {
     Arrays: Arrays,
     Objects: Objects,
     Stream: Stream,
@@ -32,4 +32,3 @@ if (typeof window === 'object' && window) {
         window.mojo = module;
     }
 }
-
