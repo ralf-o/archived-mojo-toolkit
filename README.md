@@ -59,5 +59,8 @@ There you'll find detailed description of the available classes
 and methods.<br/>
 The API documentation also enables to have a direct look into main source code and
 unit tests.
+For each method, examples are provide to show the usage.
+
+
 
 
