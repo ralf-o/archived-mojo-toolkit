@@ -25,6 +25,8 @@ not in this one.
   This class is quite similar to 'java.util.stream.Streams' from the Java world,
   seqs in the Clojure world, streams in Scheme and Scala or lazy lists in
   Haskell (although the implementation and behavior details might be different).
+  Facebook provides a similar class called "Seq" in the "Immutable.js" library
+  (see [here](http://facebook.github.io/immutable-js/docs/#/Seq))
 
   With Streams you can do things like the following:
 
@@ -50,7 +52,7 @@ not in this one.
 ### JavaScript support
 
 Mojo will support all ECMAScript 5 JavaScript engines, in particular all
-modern browser (IE >= 10) and server-side Node.
+modern browsers (IE >= 10) and server-side Node.
 
 ### Further information
 
