@@ -36,7 +36,7 @@ not in this one.
                 .forEach(n => console.log(n)) // Will output 2, 4, 6, 8
 
        Stream.iterate([1, 1], (n1, n2) => n1 + n2) // will calculate the first
-                .take(6)                           // six fibonacci numbers:
+                .take(7)                           // six fibonacci numbers:
                 .toArray()                         // [1, 1, 2, 3, 5, 8, 13]
 
 
