@@ -68,8 +68,8 @@ module.exports = function (grunt) {
                 options: {
                     source: 'src/module/',
                     destination: 'dist/v<%= pkg.version %>/docs/api',
-                    autoPrivate: false,
-                    title: 'Mojo Toolkit',
+                    //autoPrivate: false,
+		    title: 'Mojo Toolkit',
                     test: {
                         type: 'mocha',
                         source: './specs',

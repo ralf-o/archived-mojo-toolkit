@@ -4,7 +4,7 @@
   "homepage": "https://github.com/ralf-o/mojo-toolkit",
   "devDependencies": {
     "babel-runtime": "^5.2.17",
-    "esdoc": "0.2.5",
+    "esdoc": "^0.2.6",
     "chai": "~2.3.0",
     "grunt": "^0.4.5",
     "grunt-babel": "^5.0.1",
@@ -18,7 +18,6 @@
     "grunt-mocha-istanbul": "^3.0.1",
     "grunt-mocha-test": "^0.12.7",
     "immutable": "^3.7.4",
-    "mocha": "^2.3.1",
-    "yuidoc-theme-blue": "^0.1.8"
+    "mocha": "^2.3.1"
   }
 }

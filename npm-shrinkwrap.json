@@ -1,0 +1,13 @@
+{
+  "name": "mojo-toolkit",
+  "dependencies": {
+    "grunt-esdoc": {
+      "dependencies": {
+        "esdoc": {
+          "version": "^0.2.6"
+	    }
+      }
+    }
+  }
+}
+
