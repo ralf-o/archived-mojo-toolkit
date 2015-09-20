@@ -13,7 +13,7 @@ export default class Strings {
     }
 
     /**
-     * Will return a short string representation for debugging purposes.
+     * Will return a proper string representation for debugging purposes.
      *
      * @ignore
      */

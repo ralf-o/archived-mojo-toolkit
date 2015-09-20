@@ -34,12 +34,12 @@ not in this one.
      Seq.from([1, 2, 3, 4, 5])
               .takeWhile(n => n < 5)
               .map(n => n * 2)
-              .forEach(n => console.log(n)) // Will output 2, 4, 6, 8
+              .forEach(n => console.log(n))   // will output 2, 4, 6, 8
 
      Seq.iterate([1, 1], (n1, n2) => n1 + n2) // will calculate the first
-              .take(7)                        // six fibonacci numbers:
+              .take(7)                        // seven fibonacci numbers:
               .toArray()                      // [1, 1, 2, 3, 5, 8, 13]
-  ```
+    ```
 
 - *Class "Objects":*<br/>
   Utility class with some static helper functions concerning objects.
@@ -57,7 +57,7 @@ modern browsers (IE >= 10) and server-side Node.
 
 ### Further information
 
-For more information please refer to the Mojo API documentaion.<br/>
+For more information please refer to the Mojo API documentation.<br/>
 There you'll find detailed description of the available classes
 and methods.<br/>
 The API documentation also enables to have a direct look into main source code and
