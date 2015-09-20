@@ -116,8 +116,8 @@ module.exports = function (grunt) {
                     spawn: true,
                 },
                 files: ['src/**/*.js', 'specs/**/*.js'],
-                //tasks: ['compile', 'mochaTest']
-                tasks: ['esdoc']
+                tasks: ['compile', 'mochaTest']
+                //tasks: ['escdoc']
             }
         }
     });

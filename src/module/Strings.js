@@ -3,6 +3,24 @@
 import Objects from './Objects';
 
 export default class Strings {
+    /**
+     * Will throw exception if someone tries to instantiate this utility class.
+     *
+     * @ignore
+     */
+    construct() {
+        throw '[Strings] Class is not instantiable';
+    }
+
+    /**
+     * Will return a short string representation for debugging purposes.
+     *
+     * @ignore
+     */
+    static toString() {
+        return '<utility class Strings>';
+    }
+
    /**
      * @param {string} text
      *     The string to be trimmed

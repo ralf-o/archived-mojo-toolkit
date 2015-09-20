@@ -1,6 +1,24 @@
 'use strict';
 
 export default class Objects {
+    /**
+     * Will throw exception if someone tries to instantiate this utility class.
+     *
+     * @ignore
+     */
+    construct() {
+        throw '[Objects] Class is not instantiable';
+    }
+
+    /**
+     * Will return a short string representation for debugging purposes.
+     *
+     * @ignore
+     */
+    static toString() {
+        return '<utility class Objects>';
+    }
+
     static isSomething(obj) {
         return obj !== null && obj !== undefined;
     }

@@ -1,23 +1,17 @@
-import Arrays from "./module/Arrays";
-import Objects from "./module/Objects";
-import Strings from "./module/Strings";
-import Stream from "./module/Stream";
+import Objects from './module/Objects';
+import Strings from './module/Strings';
+import Arrays from './module/Arrays';
+import Stream from './module/Stream';
+import Control from './module/Control';
 
-const module = {
-    Arrays: Arrays,
-    Objects: Objects,
-    Stream: Stream,
-    Strings: Strings
-};
+
+/**
+ * @class SomeTest
+ */
+
+const module = { Objects, Strings, Arrays, Stream, Control };
 
 export default module;
-
-export {
-    Arrays,
-    Objects,
-    Stream,
-    Strings
-}
 
 if (typeof define === 'function' && define.amd) {
     define(() => module);

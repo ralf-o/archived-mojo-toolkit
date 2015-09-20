@@ -16,11 +16,15 @@ export default class Stream {
          * @ignore
          * @private
          */
-        this._generator = generator;
+        this.__generator = generator;
+    }
+
+    toString() {
+        return '<instance of Stream>';
     }
 
     [Symbol.iterator]() {
-        const iter = this._generator();
+        const iter = this.__generator();
         var ret;
 
         if (iter && typeof iter.next === 'function') {
@@ -91,6 +95,10 @@ export default class Stream {
                 }
             }
         }.bind(this));
+    }
+
+    flatMap(f) {
+        return Stream.flatten(this.map(f));
     }
 
     takeWhile(pred)  {
@@ -195,6 +203,10 @@ export default class Stream {
         return Stream.from(this.toArray());
     }
 
+    static toString() {
+        return '<class Stream>';
+    }
+
     static empty() {
         return Stream.of();
     }
@@ -225,6 +237,20 @@ export default class Stream {
         }
 
         return ret;
+    }
+
+    static concat(...streams) {
+        return Stream.flatten(Stream.from(streams));
+    }
+
+    static flatten(streamOfStreams) {
+        return new Stream(function* () {
+            for (const stream of Stream.from(streamOfStreams)) {
+                for (const item of Stream.from(stream)) {
+                    yield item;
+                }
+            }
+        });
     }
 
     static iterate(initialValues, f) {

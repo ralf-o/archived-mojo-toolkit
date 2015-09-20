@@ -5,6 +5,24 @@
  */
 export default class Arrays {
     /**
+     * Will throw exception if someone tries to instantiate this utility class.
+     *
+     * @ignore
+     */
+    construct() {
+        throw '[Arrays] Class is not instantiable';
+    }
+
+    /**
+     * Will return a short string representation for debugging purposes.
+     *
+     * @ignore
+     */
+    static toString() {
+        return '<utility class Arrays>';
+    }
+
+    /**
      * @param  {array} arr
      *     The array that may contain the value
      *

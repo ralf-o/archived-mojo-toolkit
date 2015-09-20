@@ -97,6 +97,60 @@ describe('Testing static factory method Stream.from', () => {
 });
 
 /**
+ * @test {Stream.concat}
+ */
+describe('Testing static method Stream.concat', () => {
+    it ('should concatenate multiple streams', () =>
+        expect(Stream.concat(Stream.of(1, 2, 3), Stream.of(44, 55, 66)).toArray())
+                .to.eql([1, 2, 3, 44, 55, 66])
+    );
+
+    it ('should concatenate multiple streamables', () =>
+        expect(Stream.concat([1, 2, 3], Stream.of(44, 55, 66)).toArray())
+                .to.eql([1, 2, 3, 44, 55, 66])
+    );
+
+    it ('should concatenate empty streams to an empty stream', () =>
+        expect(Stream.concat(Stream.empty(), Stream.from([])).toArray())
+                .to.eql([])
+    );
+
+    it ('should concatenate empty streamables to an empty stream', () =>
+        expect(Stream.concat([], Stream.from([])).toArray())
+                .to.eql([])
+    );
+});
+
+/**
+ * @test {Stream.flatten}
+ */
+describe('Testing static method Stream.flatten', () => {
+    it ('should flatten a stream of streams to a concatenated stream', () =>
+        expect(Stream.flatten(Stream.of(Stream.of(1, 2, 3), Stream.of(44, 55, 66))).toArray())
+                .to.eql([1, 2, 3, 44, 55, 66])
+    );
+
+    it ('should flatten a stream of streamables to a concatenated stream', () =>
+        expect(Stream.flatten(Stream.of([1, 2, 3], [44, 55, 66])).toArray())
+                .to.eql([1, 2, 3, 44, 55, 66])
+    );
+
+    it ('should flatten a streamable of streamables to a concatenated stream', () =>
+        expect(Stream.flatten([[1, 2, 3], [44, 55, 66]]).toArray())
+                .to.eql([1, 2, 3, 44, 55, 66])
+    );
+
+    it ('should flatten an empty stream to an empty stream', () =>
+        expect(Stream.flatten(Stream.empty()).count())
+                .to.eql(0)
+    );
+
+    it ('should fllatten an empty streamable to an empty stream', () =>
+        expect(Stream.flatten([]).toArray())
+                .to.eql([])
+    );
+})
+/**
  * @test {Stream.iterate}
  */
 describe('Testing static factory method Stream.iterate', () => {
@@ -223,6 +277,26 @@ describe('Testing method Stream#filter', () => {
     it('should throw a TypeError if alleged function is not really a function', () =>
         expect(() => Stream.empty().filter('invalid!!!'))
                 .to.throw(TypeError)
+    );
+});
+
+/**
+ * @test {Stream#flatMap}
+ */
+describe('Testing method Stream#flatMap', () => {
+    it('should map stream to stream of streams and flatten the result afterwards', () =>
+        expect(Stream.of(1, 2, 3)
+                .flatMap(item => Stream.of([item, item * 10]))
+                .toArray())
+                .to.eql([[1, 10], [2, 20], [3, 30]])
+    );
+
+    it('should allow list comprehension with streams', () =>
+        expect(Stream.of('A', 'B')
+                .flatMap(a => Stream.of(1, 2, 3)
+                                    .flatMap(b => Stream.of('' + a + b)))
+                .toArray())
+                .to.eql(['A1', 'A2', 'A3', 'B1', 'B2', 'B3'])
     );
 });
 
