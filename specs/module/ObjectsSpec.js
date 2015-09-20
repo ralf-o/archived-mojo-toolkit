@@ -143,14 +143,25 @@ describe('Testing static function Objects.asString', () => {
 /**
  * @test {Objects.get}
  */
-// TODO: Test for ClojureScript objects is missing
+// TODO: Tests for ClojureScript and Immutable objects are missing
 describe('Testing static function Objects.get', () => {
-    it('should return the property of a given object if the corresponding property is given', () =>
+    it('should return the property of a given object if the corresponding property exists', () =>
         expect(Objects.get({someProp: 42}, 'someProp'))
                 .to.eql(42)
     );
 
-    it('should return the property of a given object graph if the given path refers a given property', () => {
+    it('should return the default value if the corresponding property does not exist', () =>
+        expect(Objects.get({someProp: 42}, 'someOtherProp', 100))
+                .to.eql(100)
+    );
+});
+
+/**
+ * @test {Objects.getIn}
+ */
+// TODO: Tests for ClojureScript and Immutable objects are missing
+describe('Testing static function Objects.getIn', () => {
+    it('should return the property of a given object graph if the given key path refers a given property', () => {
         const obj = {
                       prop1: {
                           prop2: {
@@ -159,11 +170,10 @@ describe('Testing static function Objects.get', () => {
                       }
                   };
 
-        expect(Objects.get(obj, ['prop1']).prop2.prop3).to.eql([42])
-                && expect(Objects.get(obj, ['prop1', 'prop2']).prop3).to.eql([42])
-                && expect(Objects.get(obj, ['prop1', 'prop2', 'prop3'])).to.eql([42])
-                && expect(Objects.get(obj, ['prop1', ['prop2', 'prop3']])).to.eql([42])
-                && expect(Objects.get(obj, ['prop1', ['prop2', ['prop3']], 0])).to.eql(42);
+        expect(Objects.getIn(obj, ['prop1']).prop2.prop3).to.eql([42])
+                && expect(Objects.getIn(obj, ['prop1', 'prop2']).prop3).to.eql([42])
+                && expect(Objects.getIn(obj, ['prop1', 'prop2', 'prop3'])).to.eql([42])
+                && expect(Objects.getIn(obj, ['prop1', 'prop2', 'prop3', 0])).to.eql(42);
     });
 });
 

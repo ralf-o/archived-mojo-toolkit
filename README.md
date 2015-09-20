@@ -25,7 +25,7 @@ not in this one.
   This class is quite similar to 'java.util.stream.Seqs' from the Java world,
   seqs in the Clojure world, streams in Scheme and Scala or lazy lists in
   Haskell (although the implementation and behavior details might be different).
-  Facebook provides a similar class called "Seq" in the "Immutable.js" library
+  Facebook provides a similar class also called "Seq" in the "Immutable.js" library
   (see [here](http://facebook.github.io/immutable-js/docs/#/Seq))
 
   With Seqs you can do things like the following:
@@ -63,5 +63,3 @@ and methods.<br/>
 The API documentation also enables to have a direct look into main source code and
 unit tests.
 For each method, examples are provide to show the usage.
-
-
