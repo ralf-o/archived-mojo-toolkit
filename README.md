@@ -17,28 +17,28 @@ not in this one.
 
 ### Current features of Mojo
 
-- *Class "Stream"*:<br/>
+- *Class "Seq"*:<br/>
   This class allows to iterate over collections and other iterable things
   in a very convenient way.
   Most stream operation will work lazily, means transforming streams
   does normally not result in copying the underlying data collections.
-  This class is quite similar to 'java.util.stream.Streams' from the Java world,
+  This class is quite similar to 'java.util.stream.Seqs' from the Java world,
   seqs in the Clojure world, streams in Scheme and Scala or lazy lists in
   Haskell (although the implementation and behavior details might be different).
   Facebook provides a similar class called "Seq" in the "Immutable.js" library
   (see [here](http://facebook.github.io/immutable-js/docs/#/Seq))
 
-  With Streams you can do things like the following:
+  With Seqs you can do things like the following:
 
     ```javascript
-     Stream.from([1, 2, 3, 4, 5])
+     Seq.from([1, 2, 3, 4, 5])
               .takeWhile(n => n < 5)
               .map(n => n * 2)
               .forEach(n => console.log(n)) // Will output 2, 4, 6, 8
 
-     Stream.iterate([1, 1], (n1, n2) => n1 + n2) // will calculate the first
-              .take(7)                           // six fibonacci numbers:
-              .toArray()                         // [1, 1, 2, 3, 5, 8, 13]
+     Seq.iterate([1, 1], (n1, n2) => n1 + n2) // will calculate the first
+              .take(7)                        // six fibonacci numbers:
+              .toArray()                      // [1, 1, 2, 3, 5, 8, 13]
   ```
 
 - *Class "Objects":*<br/>

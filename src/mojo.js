@@ -1,7 +1,7 @@
 import Objects from './module/Objects';
 import Strings from './module/Strings';
 import Arrays from './module/Arrays';
-import Stream from './module/Stream';
+import Seq from './module/Seq';
 import Control from './module/Control';
 
 
@@ -9,7 +9,7 @@ import Control from './module/Control';
  * @class SomeTest
  */
 
-const module = { Objects, Strings, Arrays, Stream, Control };
+const module = { Objects, Strings, Arrays, Seq, Control };
 
 export default module;
 

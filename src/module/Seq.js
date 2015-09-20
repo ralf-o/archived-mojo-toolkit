@@ -3,11 +3,11 @@
 /**
  * Class as representation of a lazy sequences
  *
- * @class Stream
+ * @class Seq
  */
-export default class Stream {
+export default class Seq {
     /**
-     * @class Stream
+     * @class Seq
      * @constructor
      * @param {function} generator The generator responsible for the iteration
      */
@@ -20,7 +20,7 @@ export default class Stream {
     }
 
     toString() {
-        return '<instance of Stream>';
+        return '<instance of Seq>';
     }
 
     [Symbol.iterator]() {
@@ -61,18 +61,18 @@ export default class Stream {
     };
 
     /**
-     * Maps each value of the stream
+     * Maps each value of the seq
      *
-     * @method Stream.map
+     * @method Seq.map
      * @param {function} f Mapping function
-     * @return {Stream} Stream of the mapped values
+     * @return {Seq} Seq of the mapped values
      */
     map(f) {
         if (typeof f !== 'function') {
-            throw new TypeError('Stream.map: Alleged mapping function is not really a function')
+            throw new TypeError('Seq.map: Alleged mapping function is not really a function')
         }
 
-        return new Stream(function* () {
+        return new Seq(function* () {
             let index = 0;
 
             for (let x of this) {
@@ -83,10 +83,10 @@ export default class Stream {
 
     filter(pred) {
         if (typeof pred !== 'function') {
-            throw new TypeError('Stream.filter: Alleged predicate is not really a function')
+            throw new TypeError('Seq.filter: Alleged predicate is not really a function')
         }
 
-        return new Stream(function* () {
+        return new Seq(function* () {
             let index = 0;
 
             for (let x of this) {
@@ -98,15 +98,15 @@ export default class Stream {
     }
 
     flatMap(f) {
-        return Stream.flatten(this.map(f));
+        return Seq.flatten(this.map(f));
     }
 
     takeWhile(pred)  {
         if (typeof pred !== 'function') {
-            throw new TypeError('Stream.filter: Alleged predicate is not really a function')
+            throw new TypeError('Seq.filter: Alleged predicate is not really a function')
         }
 
-        return new Stream(function* () {
+        return new Seq(function* () {
             let index = 0;
 
             for (let x of this) {
@@ -121,10 +121,10 @@ export default class Stream {
 
     skipWhile(pred)  {
         if (typeof pred !== 'function') {
-            throw new TypeError('Stream.filter: Alleged predicate is not really a function')
+            throw new TypeError('Seq.filter: Alleged predicate is not really a function')
         }
 
-        return new Stream(function* () {
+        return new Seq(function* () {
             let index = 0,
                 alreadyStarted = false;
 
@@ -147,7 +147,7 @@ export default class Stream {
 
     reduce(f, seed) {
         if (typeof f !== 'function') {
-            throw new TypeError('Stream.filter: Alleged function is not really a function')
+            throw new TypeError('Seq.filter: Alleged function is not really a function')
         }
 
         const dummy = {};
@@ -182,7 +182,7 @@ export default class Stream {
 
     forEach(action) {
         if (typeof action !== 'function') {
-            throw new TypeError('Stream.forEach: Alleged action is not really a function')
+            throw new TypeError('Seq.forEach: Alleged action is not really a function')
         }
 
         let idx = 0;
@@ -200,53 +200,53 @@ export default class Stream {
     }
 
     force() {
-        return Stream.from(this.toArray());
+        return Seq.from(this.toArray());
     }
 
     static toString() {
-        return '<class Stream>';
+        return '<class Seq>';
     }
 
     static empty() {
-        return Stream.of();
+        return Seq.of();
     }
 
     static of(...items) {
-        return Stream.from(items);
+        return Seq.from(items);
     }
 
     // TODO: Handling of ClojureScript objects not really nice (still working)
     static from(items) {
         var ret;
 
-        if (items instanceof Stream) {
+        if (items instanceof Seq) {
             ret = items;
         } else if (items && typeof items[Symbol.iterator] === 'function') {
-            ret = new Stream(() => items[Symbol.iterator]());
+            ret = new Seq(() => items[Symbol.iterator]());
         } else  if (items && items['cljs$core$ISeqable$_seq$arity$1'] && typeof cljs === 'object') {
             let seq = cljs.core.seq(items);
 
-            ret = new Stream(function* () {
+            ret = new Seq(function* () {
                 while (!cljs.core.empty_QMARK_(seq)) {
                     yield cljs.core.first(seq);
                     seq = cljs.core.rest(seq);
                 }
             });
         } else {
-            ret = Stream.empty();
+            ret = Seq.empty();
         }
 
         return ret;
     }
 
-    static concat(...streams) {
-        return Stream.flatten(Stream.from(streams));
+    static concat(...seqs) {
+        return Seq.flatten(Seq.from(seqs));
     }
 
-    static flatten(streamOfStreams) {
-        return new Stream(function* () {
-            for (const stream of Stream.from(streamOfStreams)) {
-                for (const item of Stream.from(stream)) {
+    static flatten(seqOfSeqs) {
+        return new Seq(function* () {
+            for (const seq of Seq.from(seqOfSeqs)) {
+                for (const item of Seq.from(seq)) {
                     yield item;
                 }
             }
@@ -256,7 +256,7 @@ export default class Stream {
     static iterate(initialValues, f) {
         const initVals = initialValues.slice();
 
-        return new Stream(function* () {
+        return new Seq(function* () {
             const values = initVals.slice();
 
             while (true) {
@@ -267,24 +267,24 @@ export default class Stream {
     }
 
     static repeat(value, n = Infinity) {
-        return Stream.iterate([value], value => value).take(n);
+        return Seq.iterate([value], value => value).take(n);
     }
 
     /**
-     * Creates a stream of numeric values from a start value (including) to
+     * Creates a seq of numeric values from a start value (including) to
      * an end value (excluding).
      *
      * @example
-     *     Stream.range(1, 10)      // 1, 2, 3, 4, 5, 6, 7, 8, 9
-     *     Stream.range(0, -8, -2)  // 0, -2, -4, -6
+     *     Seq.range(1, 10)      // 1, 2, 3, 4, 5, 6, 7, 8, 9
+     *     Seq.range(0, -8, -2)  // 0, -2, -4, -6
      *
-     * @method Stream.range
+     * @method Seq.range
      * @param {Number} start Start value
      * @param {Number} end End value
-     * @return {Stream} Stream of iterated values
+     * @return {Seq} Seq of iterated values
      */
     static range(start, end = null, step = 1) {
-        let ret =  Stream.iterate([start], value => value += step);
+        let ret =  Seq.iterate([start], value => value += step);
 
         if (end !== undefined && end !== null) {
            const pred = step < 0 ? (n => n > end) : (n => n < end);
@@ -295,7 +295,7 @@ export default class Stream {
         return ret;
     }
 
-    static isStreamable(obj) {
+    static isSeqable(obj) {
         return !!obj && (typeof obj[Symbol.iterator] === 'function'
             || !!obj["cljs$core$ISeqable$_seq$arity$1"] && typeof cljs === 'object');
     }

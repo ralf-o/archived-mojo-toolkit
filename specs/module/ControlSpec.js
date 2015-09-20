@@ -3,7 +3,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import Control from '../../src/module/Control';
-import Stream from '../../src/module/Stream';
+import Stream from '../../src/module/Seq';
 
 /**
  * @test {Control.doMonad}

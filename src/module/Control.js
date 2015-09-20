@@ -1,6 +1,6 @@
 'use strict';
 
-import Stream from './Stream';
+import Seq from './Seq';
 
 export default class Control {
     constructor() {
@@ -13,7 +13,7 @@ export default class Control {
 
     /**
      * Some kind of Haskell's "do-notation" for monads provided for JavaScript using "ECMAScript 20015" generators.
-     * Works even in non-determinism context (for example: list monads => Streams).
+     * Works even in non-determinism context (for example: list monads => Seqs).
      *
      * @todo I do not think this is really a good idea ... it's better to use "flatMap", "map" and "of" in case
      *       you want to go a monadic way.
