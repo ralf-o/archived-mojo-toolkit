@@ -3,6 +3,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import Seq from '../../src/module/Seq';
+import Transformer from '../../src/module/Transformer';
 
 /**
  * @test {Seq}

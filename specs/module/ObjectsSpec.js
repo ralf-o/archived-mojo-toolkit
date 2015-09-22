@@ -141,6 +141,42 @@ describe('Testing static function Objects.asString', () => {
 });
 
 /**
+ * @test {Objects.shallowCopy}
+ */
+// TODO: Tests for ClojureScript and Immutable objects are missing
+describe('Testing static function Objects.shallowCopy', () => {
+    it('should create copy with identical JSON representation', () => {
+        const
+            original = {x: 1, y: [2, 3], z: {$1: 11, $2: 33}},
+            copy = Objects.shallowCopy(original);
+
+        expect(original)
+                .not.to.equal(copy);
+
+        expect(JSON.stringify(original))
+                .to.eql(JSON.stringify(copy));
+    });
+
+    it('should not modify original object if shallow copy is modified on top level', () => {
+        const
+            original = {x: 1, y: [2, 3], z: {$1: 11, $2: 33}},
+            originalJson = JSON.stringify(original),
+            copy = Objects.shallowCopy(original);
+
+        expect(original)
+                .not.to.equal(copy);
+
+        expect(JSON.stringify(original))
+                .to.eql(JSON.stringify(copy));
+
+        copy.x = 111;
+
+        expect(JSON.stringify(original))
+                .to.eql(originalJson);
+    });
+});
+
+/**
  * @test {Objects.get}
  */
 // TODO: Tests for ClojureScript and Immutable objects are missing
