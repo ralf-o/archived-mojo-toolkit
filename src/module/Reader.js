@@ -1,13 +1,15 @@
 'use strict';
 
-//import Seq from './Seq';
+import Objects from './Objects';
+import Seq from './Seq';
 
-/*
-class Reader {
+export default class Reader extends Seq {
     constructor(data) {
         if (data === null || typeof data !== 'object') {
             throw new TypeError("[Reader.constructor] First argument 'data' must be an object");
         }
+
+        super(() => this.getEntries().map(entry => entry.value)[Symbol.iterator]());
 
         this.__data = data;
 
@@ -40,14 +42,27 @@ class Reader {
         return this.getEntries().map(entry => entry.key);
     }
 
-    getValues() {
-        return this.getEntires().map(entry =>entry.value);
-    }
-
     getEntries() {
-        // TODO
+        const
+            arr = [], // we are lazy here
+            keys = Array.isArray(this.__data)
+                    ? Seq.range(0, this.__data.length)
+                    : Object.getOwnPropertyNames(this.__data);
+
+        for (let key of keys) {
+            arr.push({key: key, value: Reader.normalize(this.__data[key])});
+        }
+
+        return Seq.from(arr);
     }
 
+    toString() {
+        return '<instance of Reader>';
+    }
+
+    static toString() {
+        return '<class Reader>';
+    }
 
     static normalize(obj) {
         var ret;
@@ -61,4 +76,3 @@ class Reader {
         return ret;
     }
 }
-*/

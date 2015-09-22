@@ -513,12 +513,14 @@ class Transformer {
 
         if (!Array.isArray(obj)) {
             throw 'Modifier $map can only be applied on an array';
-        } else if (typeof args !== 'function') {
-            throw 'Argument of $map must be a function';
+        } else if (typeof args !== 'function' && (args === null  || typeof args !== 'object')) {
+            throw 'Argument of $map must be a function or an transformation plan';
         }
 
         if (typeof args === 'function') {
             ret = obj.map(args);
+        } else {
+            ret = obj.map(v => Transformer.transform(v, args));
         }
 
         return ret;
@@ -546,11 +548,14 @@ class Transformer {
     }
 }
 
+
 /* TODO - remove this
 console.log("-------")
-const input = {a: [11, 22, 33, 44, 55], some: {counter: 1, x: 33, y:44, z: {xxx: 42}}};
+const input = {a: [{x: 11}, {x: 22}, {x: 33}, {x: 44}, {x: 55}], some: {counter: 1, x: 33, y:44, z: {xxx: 42}}};
 console.log(input);
-const output = Objects.transform(input, {a: {'2': {$update: v => 42}}, some: {counter: {$update: n => n * 101}, y: {$set: 55}, z: {$update: {xxx: {$update: x => x + 1}}}}})
+var toString = () => 'xx';
+var f = {x:  {$update: n => n * 3}};
+const output = Objects.transform(input, {a: {$map: f}, some: {counter: {$update: n => n * 101}, y: {$set: 55}, z: {$update: {xxx: {$update: x => x + 1}}}}})
 console.log("-------")
 console.log(output);
 console.log("-------")
