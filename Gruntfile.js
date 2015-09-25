@@ -42,35 +42,13 @@ module.exports = function (grunt) {
                 src: ['build/specs/**/*.js']
             }
         },
-        yuidoc: {
-            compile: {
-               name: '<%= pkg.name %>',
-               description: '<%= pkg.description %>',
-               version: '<%= pkg.version %>',
-               url: '<%= pkg.homepage %>',
-               options: {
-                   paths: 'src/',
-                   outdir: 'dist/v<%= pkg.version %>/docs/api-youidoc/',
-                   themedir: 'node_modules/yuidoc-theme-blue/',
-                   tabtospace: 4
-                }
-            }
-        },
-        jsdoc: {
-            dist: {
-                src: ['build/src/**/*.js'],
-                options: {
-                    destination: 'dist/v<%= pkg.version %>/docs/api-jsdoc'
-                }
-            }
-        },
         esdoc : {
             dist : {
                 options: {
                     source: 'src/module/',
                     destination: 'dist/v<%= pkg.version %>/docs/api',
                     //autoPrivate: false,
-                     title: 'Mojo Toolkit',
+                    title: 'Mojo Toolkit',
                     test: {
                         type: 'mocha',
                         source: './specs',
@@ -145,7 +123,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('compile', ['babel']);
     grunt.registerTask('test', ['babel', 'mochaTest']);
-    grunt.registerTask('doc', ['babel', "mochaTest", 'yuidoc']);
-    grunt.registerTask('dist', ['clean', "babel", 'mochaTest', 'esdoc', 'browserify'/*, 'uglify', 'compress'*/]);
+    grunt.registerTask('doc', ['babel', "mochaTest", 'esdoc']);
+    grunt.registerTask('dist', ['clean', "babel", "mochaTest", 'esdoc', 'browserify', 'uglify', 'compress']);
     grunt.registerTask('default', ['dist']);
 };
