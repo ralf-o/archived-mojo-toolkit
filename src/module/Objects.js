@@ -1,6 +1,7 @@
 'use strict';
 
 import Seq from './Seq';
+import Reader from './Reader';
 
 /**
  * Utility class with static helper functions to be used with any value - mainly objects.
@@ -144,7 +145,11 @@ export default class Objects {
                     || (typeof cljs === 'object' && cljs && cljs.coll_QMARK_(obj))) {
                 ret = obj;
             } else {
-                ret = Object.assign(Object.create(obj.constructor), obj);
+                ret = Object.create(obj.constructor);
+
+                for (let propName of Object.getOwnPropertyNames(obj)) {
+                    ret[propName] = obj[propName];
+                }
             }
         } else {
             ret = obj;
@@ -252,6 +257,31 @@ export default class Objects {
         return ret;
     }
 
+    // TODO - apidoc and unit tests
+    static getKeys(obj) {
+        Objects.getEntries().map(entry => entry[0]);
+    }
+
+    // TODO - apidoc and unit tests
+    static getValues(obj) {
+        Objects.getEntries().map(entry => entry[1]);
+    }
+
+    // TODO - apidoc and unit tests
+    static getEntries(obj) {
+        var ret;
+
+        if (obj === null || typeof obj !== 'object') {
+            ret = Seq.empty();
+        } else if (typeof Immutable === 'object' && Immutable && obj instanceof Immutable.Collection) {
+            ret = Seq.from(obj.toEntrySeq());
+        } else {
+
+        }
+
+        return ret;
+    }
+
     /**
      * Converts an object to its plain old JavaScript representation.
      * The purpose of this method is to convert Immutable and ClojureScript
@@ -291,8 +321,17 @@ export default class Objects {
     static transform(obj, transformationPlan) {
         var ret;
 
+        if (transformationPlan === null || typeof transformationPlan !== 'object') {
+            console.error('Illegal transformation plan: ', transformationPlan);
+            throw new TypeError(`[Objects.transform] Second argument 'transformationPlan' must be an object`);
+        }
+
         try {
-            ret = Transformer.transform(obj, transformationPlan);
+            if (obj instanceof Reader) {
+                ret = new Reader(Transformer.transform(obj.__data, transformationPlan));
+            } else {
+                ret = Transformer.transform(obj, transformationPlan);
+            }
         } catch (errorMsg) {
             if (typeof errorMsg === 'string') {
                 throw new TypeError('[Objects.transform] ' + errorMsg);
@@ -308,6 +347,18 @@ export default class Objects {
 
 class Transformer {
     static transform(obj, plan) {
+        var ret;
+
+        if (obj instanceof Reader) {
+            ret = obj.transform(plan);
+        } else {
+            ret = Transformer.__transformPlainJS(obj, plan);
+        }
+
+        return ret;
+    }
+
+    static __transformPlainJS(obj, plan) {
         const
             keys = Object.getOwnPropertyNames(plan);
 
@@ -320,6 +371,7 @@ class Transformer {
                 var modifier = Transformer['__' + key];
 
                 if (!modifier) {
+                    console.error('Illegal transformation plan: ', plan);
                     throw `Illegal modifier '${key}'`;
                 } else if (keys.length > 1) {
                     throw new `[Transformator#tranform] Modifier '${key}' illegally mixed with other keys`;
@@ -328,13 +380,15 @@ class Transformer {
                 ret = modifier(obj, value);
             } else {
                 if (!value || typeof value !== 'object') {
-                    throw `Illegal transformation plan for key ${key}: ${value}`;
+                    console.error('Illegal transformation plan: ', plan);
+                    throw `Illegal transformation plan for key '${key}': ${value}`;
                 }
 
                 const newObj = Transformer.transform(obj[key], value);
 
                 if (newObj !== obj[key]) {
                     if (Array.isArray(obj) && (isNaN(key) || key.toString() !== '' + parseInt(key, 10))) {
+                        console.error('Illegal transformation plan: ', plan);
                         throw 'Illegal array key: ' + key;
                     }
 

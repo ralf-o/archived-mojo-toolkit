@@ -12,10 +12,9 @@ describe('Testing Reader', () => {
 
         const reader = new Reader({x: {y: [11, {x: 22}, 33]}});
 
-                console.log("Juhu")
+//    console.log(reader.getIn(['x', 'y']))
+//        console.log("Result", reader.getIn(['x', 'y']).map(x => x.toString()).toArray())
 
-        console.log("Result", reader.getIn(['x', 'y']).map(x => x.toString()).toArray())
-
-         process.exit(0);
+//         process.exit(0);
     });
 });

@@ -2,8 +2,9 @@ import Objects from './module/Objects';
 import Strings from './module/Strings';
 import Arrays from './module/Arrays';
 import Seq from './module/Seq';
+import Reader from './module/Reader'
 
-const module = { Objects, Strings, Arrays, Seq };
+const module = { Objects, Strings, Arrays, Seq, Reader };
 
 export default module;
 

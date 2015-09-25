@@ -10,7 +10,8 @@ module.exports = function (grunt) {
             options: {
                 modules: 'common',
                 retainLines: true,
-                moduleIds: false
+                moduleIds: false,
+                optional: ['runtime']
             },
             dist: {
                 files: [{
@@ -69,7 +70,7 @@ module.exports = function (grunt) {
                     source: 'src/module/',
                     destination: 'dist/v<%= pkg.version %>/docs/api',
                     //autoPrivate: false,
-		    title: 'Mojo Toolkit',
+                     title: 'Mojo Toolkit',
                     test: {
                         type: 'mocha',
                         source: './specs',
@@ -136,17 +137,15 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-mocha-test');
-    //grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    //grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-esdoc');
 
     grunt.registerTask('compile', ['babel']);
     grunt.registerTask('test', ['babel', 'mochaTest']);
     grunt.registerTask('doc', ['babel', "mochaTest", 'yuidoc']);
-    grunt.registerTask('dist', ['clean', "babel", 'mochaTest', /* 'yuidoc', 'jsdoc', */'esdoc', 'browserify', 'uglify', 'compress']);
+    grunt.registerTask('dist', ['clean', "babel", 'mochaTest', 'esdoc', 'browserify'/*, 'uglify', 'compress'*/]);
     grunt.registerTask('default', ['dist']);
 };

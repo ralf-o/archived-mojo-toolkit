@@ -4,7 +4,7 @@
     "grunt-esdoc": {
       "dependencies": {
         "esdoc": {
-          "version": "^0.2.6"
+          "version": "^0.3.0g"
 	    }
       }
     }

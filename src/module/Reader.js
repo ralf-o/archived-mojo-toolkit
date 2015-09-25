@@ -9,25 +9,13 @@ export default class Reader extends Seq {
             throw new TypeError("[Reader.constructor] First argument 'data' must be an object");
         }
 
-        super(() => this.getEntries().map(entry => entry.value)[Symbol.iterator]());
+        if (data instanceof Reader) {
+            data = data.__data;
+        }
+
+        super(() => this.getEntries().map(entry => entry[1])[Symbol.iterator]());
 
         this.__data = data;
-
-        this.__isKeyed = this._data instanceof Array
-                ? false
-                : (typeof Map === 'function' && this.__data instanceof Map
-                        || typeof WeakMap === 'function' && this.__data instanceof WeakMap
-                        || typeof Immutable === 'object' && Immutable && this.__data instanceof Immutable.KeyedCollection
-                        || typeof cljs === 'object' && cljs && cljs.assiciative_QMARK_
-                                && cljs.asspciative_QMARK_(this.__data));
-    }
-
-    isAssociative() {
-        return this.__isKeyed;
-    }
-
-    isSequential() {
-        return !this.__isKeyed;
     }
 
     get(key) {
@@ -39,7 +27,7 @@ export default class Reader extends Seq {
     }
 
     getKeys() {
-        return this.getEntries().map(entry => entry.key);
+        return this.getEntries().map(entry => entry[0]);
     }
 
     getEntries() {
@@ -50,10 +38,14 @@ export default class Reader extends Seq {
                     : Object.getOwnPropertyNames(this.__data);
 
         for (let key of keys) {
-            arr.push({key: key, value: Reader.normalize(this.__data[key])});
+            arr.push([key, Reader.normalize(this.__data[key])]);
         }
 
         return Seq.from(arr);
+    }
+
+    transform(transformationPlan) {
+        return new Reader(Objects.transform(this.__data, transformationPlan));
     }
 
     toString() {
