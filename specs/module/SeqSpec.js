@@ -218,11 +218,22 @@ describe('Testing static method Seq.isSeqable', () => {
     it('should determine whether or not an object is seqable', () => {
         const f = Seq.isSeqable;
 
-        expect([f(undefined), f(null), f(true), f(42), f([]), f([1, 2]), f('hello'), f(Seq.empty())])
+        expect([f(undefined), f(null), f(true), f(42), f([]), f([1, 2]), f('some text'), f(Seq.empty())])
                 .to.eql([false, false, false, false, true, true, true, true]);
     });
 });
 
+/**
+ * @test {Seq.isNonStringSeqable}
+ */
+describe('Testing static method Seq.isNonStringSeqable', () => {
+    it('should determine whether or not an object is seqable and not a string', () => {
+        const f = Seq.isNonStringSeqable;
+
+        expect([f(undefined), f(null), f(true), f(42), f([]), f([1, 2]), f('some text'), f(Seq.empty())])
+                .to.eql([false, false, false, false, true, true, false, true]);
+    });
+});
 /**
  * @test {Seq#map}
  */

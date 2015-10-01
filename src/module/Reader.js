@@ -52,6 +52,16 @@ export default class Reader extends Seq {
         return '<instance of Reader>';
     }
 
+    static from(obj) {
+        if (obj === null || typeof obj !== 'object') {
+            throw new TypeError("[Reader.from] First argument 'obj' must be an object");
+        }
+
+        return (obj instanceof Reader)
+                ? obj
+                : new Reader(obj);
+    }
+
     static toString() {
         return '<class Reader>';
     }

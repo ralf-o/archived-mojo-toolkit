@@ -299,4 +299,8 @@ export default class Seq {
         return !!obj && (typeof obj[Symbol.iterator] === 'function'
             || !!obj["cljs$core$ISeqable$_seq$arity$1"] && typeof cljs === 'object');
     }
+
+    static isNonStringSeqable(obj) {
+        return (typeof obj !== 'string' && !(obj instanceof String) && Seq.isSeqable(obj));
+    }
 }
