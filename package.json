@@ -3,21 +3,25 @@
   "version": "0.1.0",
   "homepage": "https://github.com/ralf-o/mojo-toolkit",
   "devDependencies": {
+    "babel-polyfill": "^6.2.0",
+    "babel-preset-es2015": "^6.1.18",
     "babel-runtime": "^5.2.17",
     "chai": "~2.3.0",
     "esdoc": "^0.3.0",
     "grunt": "^0.4.5",
-    "grunt-babel": "^5.0.1",
+    "grunt-babel": "^6.0.0",
     "grunt-browserify": "^3.8.0",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-compress": "^0.13.0",
+    "grunt-contrib-copy": "^0.8.2",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-esdoc": "0.0.1",
     "grunt-mocha-test": "^0.12.7",
     "immutable": "^3.7.4",
     "mocha": "^2.3.1",
-    "shrinkwrap": "^0.4.0"
+    "shrinkwrap": "^0.4.0",
+    "xxxgrunt-babel": "^5.0.1"
   }
 }

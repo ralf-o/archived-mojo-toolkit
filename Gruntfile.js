@@ -8,10 +8,12 @@ module.exports = function (grunt) {
         },
         babel: {
             options: {
-                modules: 'common',
+                //modules: 'common',
                 retainLines: true,
                 moduleIds: false,
-                optional: ['runtime']
+                sourceMap: true,
+                presets: ['es2015']
+                //optional: ['runtime']
             },
             dist: {
                 files: [{
@@ -35,7 +37,8 @@ module.exports = function (grunt) {
                 options: {
                     reporter: 'spec',
                     require: [
-                        'node_modules/grunt-babel/node_modules/babel-core/node_modules/regenerator/runtime.js'
+                        //'node_modules/grunt-babel/node_modules/babel-core/node_modules/regenerator/runtime.js'
+                        'node_modules/babel-polyfill/dist/polyfill.min.js'
                     ],
                     bail: true
                 },
@@ -85,8 +88,19 @@ module.exports = function (grunt) {
                 options: {
                     mode: 'gzip'
                 },
-                src: ['dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js'],
-                dest: 'dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js.gz'
+                files: [{
+                    src: ['dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js'],
+                    dest: 'dist/v<%= pkg.version %>/mojo-<%= pkg.version %>.js.gz'
+                }, {
+                    src: ['dist/v<%= pkg.version %>/polyfill.min.js'],
+                    dest: 'dist/v<%= pkg.version %>/polyfill.min.js.gz'
+                }]
+            }
+        },
+        copy: {
+            dist: {
+                src: 'node_modules/babel-polyfill/dist/polyfill.min.js',
+                dest: 'dist/v<%= pkg.version %>/polyfill.min.js'
             }
         },
         watch: {
@@ -120,10 +134,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-esdoc');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.registerTask('compile', ['babel']);
     grunt.registerTask('test', ['babel', 'mochaTest']);
     grunt.registerTask('doc', ['babel', "mochaTest", 'esdoc']);
-    grunt.registerTask('dist', ['clean', "babel", "mochaTest", 'esdoc', 'browserify', 'uglify', 'compress']);
+    grunt.registerTask('dist', ['clean', "babel", "mochaTest", 'esdoc', 'browserify', 'uglify', 'copy', 'compress']);
     grunt.registerTask('default', ['dist']);
 };
