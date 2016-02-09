@@ -213,6 +213,33 @@ describe('Testing static function Objects.getIn', () => {
     });
 });
 
+
+/**
+ * @test {Objects.getKeys}
+ */
+describe('Testing static function Objects.getKeys', () => {
+    it('should return the keys of an object defined by an object literal', () => {
+        expect(Objects.getKeys({a: 1, b: 2, c: 3}))
+                .to.eql(['a', 'b', 'c']);
+    });
+   
+   /* 
+     Objects.getKeys({a: 1, b: 2, c: 3}); // ['a', 'b', 'c']
+     *    Objects.getKeys(null);               // []
+     *    Objects.getKeys('some text')         // []
+     * 
+     * @example
+     *    let proto = {a: 1, b: 2},
+     *        constr = () => {};
+     * 
+     *    constr.prototype = proto;
+     *    let obj = new constr();
+     *    obj.c = 3;
+     *    
+     *    Objects.getKeys(obj);     // ['a', 'b', 'c']
+     */
+});
+
 /**
  * @test {Objects.toJS}
  */

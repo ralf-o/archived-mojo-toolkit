@@ -23,6 +23,25 @@ export default class Seq {
         return '<instance of Seq>';
     }
 
+    /**
+     * Generates a new ECMAScript 6 iterator to enumerate the items of the
+     * sequence.
+     * This allows the usage of sequences in "for ... of" loops or with
+     * the spread operator (...).
+     * 
+     * @example
+     *      let myIterator = mySeq[Symbol.iterator]();
+     *
+     * @example
+     *      for (let item of k) {
+     *          console.log(item);
+     *      } 
+     *
+     * @example
+     *      let args = Seq.of(arg1, arg2, arg3);
+     * 
+     *      let result = f(...args);
+     */
     [Symbol.iterator]() {
         const iter = this.__generator();
         var ret;
@@ -81,6 +100,17 @@ export default class Seq {
         }.bind(this));
     }
 
+    /**
+     * Filters items of a sequence by a given predicate.
+     * 
+     * @param {function} pred The predicate function
+     * @return {Seq} Sequence of the filtered items
+     * 
+     * @example
+     *   let items = Seq.of(1, 2, 4, 8, 16, 32);
+     *   let result = items.filter(x => x < 10);
+     *   // 1, 2, 4, 8
+     */ 
     filter(pred) {
         if (typeof pred !== 'function') {
             throw new TypeError('Seq.filter: Alleged predicate is not really a function')

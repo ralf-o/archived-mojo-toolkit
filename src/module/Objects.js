@@ -257,31 +257,62 @@ export default class Objects {
         return ret;
     }
 
+    /**
+     * Returns the keys of all entries of a given object. 
+     * 
+     * @param {any}
+     *     The object to retrieve the keys names.
+     *     If not a real object than an empty array will be returnded.
+     * 
+     * @return {string[]}
+     *     The list of all key names.
+     * 
+     * @example
+     *    Objects.getKeys({a: 1, b: 2, c: 3}); // ['a', 'b', 'c']
+     *    Objects.getKeys(null);               // []
+     *    Objects.getKeys('some text')         // []
+     * 
+     * @example
+     *    let proto = {a: 1, b: 2},
+     *        constr = () => {};
+     * 
+     *    constr.prototype = proto;
+     *    let obj = new constr();
+     *    obj.c = 3;
+     *    
+     *    Objects.getKeys(obj);     // ['a', 'b', 'c']
+     */
     // TODO - apidoc and unit tests
     static getKeys(obj) {
-        Objects.getEntries().map(entry => entry[0]);
+        return Objects.getEntries(obj).map(entry => entry[0]);
     }
 
     // TODO - apidoc and unit tests
     static getValues(obj) {
-        Objects.getEntries().map(entry => entry[1]);
+        return Objects.getEntries(obj).map(entry => entry[1]);
     }
 
-    // TODO - apidoc and unit tests
+    // TODO - apidoc and unit tests - to be finished
     static getEntries(obj) {
         var ret;
 
         if (obj === null || typeof obj !== 'object') {
-            ret = Seq.empty();
-        } else if (typeof Immutable === 'object' && Immutable && obj instanceof Immutable.Collection) {
-            ret = Seq.from(obj.toEntrySeq());
+            ret = [];
+        } else if (typeof obj === 'object' && typeof obj.toEntrySeq === 'function') {
+            ret = Seq.from(obj.toEntrySeq()).toArray();
         } else {
-
+            const keys = Object.keys(obj);
+            
+            ret = [];
+            
+            for (let key of keys) {
+                ret.push([key, obj[key]]);   
+            }
         }
 
         return ret;
     }
-
+    
     /**
      * Converts an object to its plain old JavaScript representation.
      * The purpose of this method is to convert Immutable and ClojureScript
@@ -602,19 +633,9 @@ class Transformer {
     }
 }
 
+// Helper functions
 
-/* TODO - remove this
-console.log("-------")
-const input = {a: [{x: 11}, {x: 22}, {x: 33}, {x: 44}, {x: 55}], some: {counter: 1, x: 33, y:44, z: {xxx: 42}}};
-console.log(input);
-var toString = () => 'xx';
-var f = {x:  {$update: n => n * 3}};
-const output = Objects.transform(input, {a: {$map: f}, some: {counter: {$update: n => n * 101}, y: {$set: 55}, z: {$update: {xxx: {$update: x => x + 1}}}}})
-console.log("-------")
-console.log(output);
-console.log("-------")
-console.log(JSON.stringify(input));
-console.log("-------")
-
-process.exit(0);
-*/
+function isFBIterable (obj) {
+    return obj
+            && typeof obj.toEntrySeq === 'function';
+}
